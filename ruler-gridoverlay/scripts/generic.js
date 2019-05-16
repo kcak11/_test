@@ -6,8 +6,8 @@
 
 var zoomPercentage = 100;
 
-/* 5% change i.e. 105%, 110%, 115%, . . . */
-var zoomSteps = 5;
+/* 10% change i.e. 110%, 120%, 130%, . . . */
+var zoomSteps = 10;
 
 var imageContainer = document.querySelector("#imageContainer");
 var imgElem = document.querySelector("#imageContainer img");
@@ -26,37 +26,28 @@ var hideOverlay = function() {
     document.querySelector(".hideBtn").classList.add("hide");
     document.querySelector(".showBtn").classList.remove("hide");
 };
-var increaseGridSize = function(val) {
-    gridOverlayObject.increment(val);
-};
-var decreaseGridSize = function(val) {
-    gridOverlayObject.decrement(val);
-};
 /**
   100% ==> 1.0
 */
 var convertZoomPercentToScale = function(zp) {
     return zp / 100;
 };
-var zoomIncrease = function() {
-    zoomPercentage += zoomSteps;
-    var scale = convertZoomPercentToScale(zoomPercentage);
-    if (gridOverlayObject.gridActive) {
-        increaseGridSize(scale);
-    }
+var zoomTheImage = function(scale) {
     var theImage = document.querySelector("#imageContainer img");
     theImage.style.transformOrigin = "0 0";
     theImage.style.transform = "scale(" + scale + ")";
 };
-var zoomDecrease = function() {
-    zoomPercentage -= zoomSteps;
-    var scale = convertZoomPercentToScale(zoomPercentage);
-    if (gridOverlayObject.gridActive) {
-        decreaseGridSize(scale);
+var doZoom = function(type) {
+    if (type === "+") {
+        zoomPercentage += zoomSteps;
+    } else {
+        zoomPercentage -= zoomSteps;
     }
-    var theImage = document.querySelector("#imageContainer img");
-    theImage.style.transformOrigin = "0 0";
-    theImage.style.transform = "scale(" + scale + ")";
+    var scale = convertZoomPercentToScale(zoomPercentage);
+    gridOverlayObject.zoom(scale);
+    zoomTheImage(scale);
+    rulerBars.zoom(scale);
+    document.querySelector("#displayZoomValue").innerHTML = zoomPercentage;
 };
 var showRuler = function() {
     var rulers = document.querySelectorAll(".ruler");

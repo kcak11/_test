@@ -77,17 +77,12 @@
         };
 
         /**
-          Increase the distance between grid lines.
+          Zoom the Grid to the specified scale.
         */
-        this.increment = function(scale) {
-            this.gridScale = scale || 1;
-            checkContentLoaded();
-        };
-
-        /**
-          Decrease the distance between grid lines.
-        */
-        this.decrement = function(scale) {
+        this.zoom = function(scale) {
+            if (!this.gridActive) {
+                return;
+            }
             this.gridScale = scale || 1;
             checkContentLoaded();
         };

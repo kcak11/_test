@@ -374,6 +374,7 @@
         [].forEach.call(rulers, function(ruler) {
             ruler.parentNode.removeChild(ruler);
         });
+        this.rulerBarsEnabled = false;
     };
 
     /**
@@ -443,6 +444,33 @@
         }
     };
 
+    RulerBars.prototype.zoom = function(scale) {
+        if (!this.rulerBarsEnabled || !this.topRuler || !this.leftRuler) {
+            return;
+        }
+        if (isNaN(scale)) {
+            scale = 1;
+        }
+        /* default thickness scale = 2 */
+        var guideLineThicknessScale = (2 / scale);
+        var horizontalGuideLineSize = (this.TOP_RULER_SIZE * scale) + global.RULER_THICKNESS;
+        var verticalGuideLineSize = (this.LEFT_RULER_SIZE * scale) + global.RULER_THICKNESS;
+
+        var rulerZoomConfig = "";
+        rulerZoomConfig += ".verticalGuideLine{transform-origin:0 0;height:" + verticalGuideLineSize + "px;transform:scale(" + guideLineThicknessScale + ",1);}";
+        rulerZoomConfig += "\n.tempGuideVertical{transform-origin:0 0;height:" + verticalGuideLineSize + "px;transform:scale(" + guideLineThicknessScale + ",1);}";
+        rulerZoomConfig += "\n.horizontalGuideLine{transform-origin:0 0;width:" + horizontalGuideLineSize + "px;transform:scale(1," + guideLineThicknessScale + ");}";
+        rulerZoomConfig += "\n.tempGuideHorizontal{transform-origin:0 0;width:" + horizontalGuideLineSize + "px;transform:scale(1," + guideLineThicknessScale + ");}";
+        rulerZoomConfig += "\n.ruler.top .big:before{transform-origin:0 0;transform:scaleX(" + (1 / scale) + ");}";
+        rulerZoomConfig += "\n.ruler.left .big:before{transform-origin:0 0;transform:rotate(-90deg) scaleX(" + (1 / scale) + ");}";
+        Util.applyCSSRule(rulerZoomConfig, "rulerZoomConfig");
+
+        this.topRuler.style.transformOrigin = "0 0";
+        this.topRuler.style.transform = "scaleX(" + scale + ")";
+        this.leftRuler.style.transformOrigin = "0 0";
+        this.leftRuler.style.transform = "scaleY(" + scale + ")";
+    };
+
     /**
       Create the top & left rulers by supplying a configuration object.
       @cfg: configuration for creating the rulers.
@@ -470,6 +498,7 @@
 
         copiedCfg.parent.appendChild(this.topRuler);
         copiedCfg.parent.appendChild(this.leftRuler);
+        this.rulerBarsEnabled = true;
     };
 
 })(window);

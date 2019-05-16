@@ -23,9 +23,13 @@
                 <button class="enableGuides guideBtn" onclick="enableGuides();">Enable Guides</button>
                 <button class="disableGuides guideBtn hide" onclick="disableGuides();">Disable Guides</button>
                 <fieldset>
-                    <legend>Zoom: </legend>
-                    <button onclick="zoomIncrease();">+</button>
-                    <button onclick="zoomDecrease();">-</button>
+                    <legend>
+                        &nbsp;
+                        Zoom: <span id="displayZoomValue">100</span>
+                        %&nbsp;
+                    </legend>
+                    <button onclick="doZoom('+');">+</button>
+                    <button onclick="doZoom('-');">-</button>
                 </fieldset>
             </div>
         </div>
