@@ -1,0 +1,88 @@
+/**
+  Copyright(c) - 2019 Ashish's Web
+  Author: K.C.Ashish Kumar
+  https://kcak11.com (or) https://ashishkumarkc.com
+*/
+* {
+    outline: none;
+}
+
+body {
+    font-family: Verdana;
+}
+
+#container {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+}
+
+#imageContainer {
+    position: relative;
+    width: 800px;
+    height: 470px;
+    box-sizing: border-box;
+}
+
+.actionsContainer {
+    position: relative;
+    z-index: 200;
+}
+
+button {
+    display: inline-block;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 10px;
+    width: 150px;
+    height: 30px;
+    background-color: #000;
+    color: #fff;
+}
+
+.showRulerBtn, .hideRulerBtn, .enableGuides, .disableGuides {
+    margin-left: 10px;
+}
+
+fieldset {
+    margin-top: 20px;
+    margin-left: 20px;
+    width: 120px;
+    height: 70px;
+    text-align: center;
+    border: 2px solid #000;
+}
+
+fieldset legend {
+    text-align: left;
+    vertical-align: middle;
+}
+
+fieldset button {
+    width: 50px;
+    height: 50px;
+    font-size: 25px;
+    margin: 0;
+}
+
+.guideTip {
+    background-color: #ffbd2e;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 50;
+    font-size: 16px;
+    padding: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    pointer-events: none;
+    transform: translateX(-50%);
+}
+
+.hide {
+    display: none;
+}
+
+.visibleNone {
+    visibility: hidden;
+}
