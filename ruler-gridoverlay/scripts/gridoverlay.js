@@ -52,6 +52,8 @@
                 vBar.style.height = height + "px";
                 vBar.style.pointerEvents = "none";
                 vBar.style.boxSizing = "border-box";
+                vBar.style.transformOrigin = "0 0";
+                vBar.style.transform = "scaleX(" + (1 / this.gridScale) + ")";
                 gridBarContainer.appendChild(vBar);
             }
             for (var h = 0; h < height; h += gridSize) {
@@ -64,6 +66,8 @@
                 hBar.style.width = width + "px";
                 hBar.style.pointerEvents = "none";
                 hBar.style.boxSizing = "border-box";
+                hBar.style.transformOrigin = "0 0";
+                hBar.style.transform = "scaleY(" + (1 / this.gridScale) + ")";
                 gridBarContainer.appendChild(hBar);
             }
             gridBarContainer.style.transformOrigin = "0 0";
