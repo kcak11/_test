@@ -27,6 +27,12 @@ body {
 .actionsContainer {
     position: relative;
     z-index: 200;
+    background-color: rgba(255,255,255,0.7);
+    padding: 10px;
+    padding-bottom: 30px;
+    width: 550px;
+    border-top-right-radius: 33px;
+    border-bottom-right-radius: 33px;
 }
 
 button {
@@ -45,25 +51,12 @@ button {
 }
 
 fieldset {
-    margin-top: 20px;
-    margin-left: 20px;
     width: 140px;
     height: 70px;
+    margin-top: 20px;
+    margin-left: 20px;
     text-align: center;
     border: 2px solid #000;
-    position: relative;
-}
-
-fieldset:before {
-    content: " ";
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    bottom: -10px;
-    right: -10px;
-    background-color: rgba(255,255,255,0.5);
-    pointer-events: none;
-    z-index: -10;
 }
 
 fieldset legend {
