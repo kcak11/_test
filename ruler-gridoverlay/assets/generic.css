@@ -4,91 +4,91 @@
   https://kcak11.com (or) https://ashishkumarkc.com
 */
 * {
-    outline: none;
+	outline: none;
 }
 
 body {
-    font-family: Verdana;
+	font-family: Verdana;
 }
 
 #container {
-    position: absolute;
-    top: 30px;
-    left: 30px;
+	position: absolute;
+	top: 30px;
+	left: 30px;
 }
 
 #imageContainer {
-    position: relative;
-    width: 800px;
-    height: 470px;
-    box-sizing: border-box;
+	position: relative;
+	width: 800px;
+	height: 470px;
+	box-sizing: border-box;
 }
 
 .actionsContainer {
-    position: relative;
-    z-index: 200;
-    background-color: rgba(255,255,255,0.7);
-    padding: 10px;
-    padding-bottom: 30px;
-    width: 550px;
-    border-top-right-radius: 33px;
-    border-bottom-right-radius: 33px;
+	position: relative;
+	z-index: 200;
+	background-color: rgba(255, 255, 255, 0.7);
+	padding: 10px;
+	padding-bottom: 30px;
+	width: 550px;
+	border-top-right-radius: 33px;
+	border-bottom-right-radius: 33px;
 }
 
 button {
-    display: inline-block;
-    margin-top: 20px;
-    margin-left: 20px;
-    margin-right: 10px;
-    width: 150px;
-    height: 30px;
-    background-color: #000;
-    color: #fff;
+	display: inline-block;
+	margin-top: 20px;
+	margin-left: 20px;
+	margin-right: 10px;
+	width: 150px;
+	height: 30px;
+	background-color: #000;
+	color: #fff;
 }
 
 .showRulerBtn, .hideRulerBtn, .enableGuides, .disableGuides {
-    margin-left: 10px;
+	margin-left: 10px;
 }
 
 fieldset {
-    width: 140px;
-    height: 70px;
-    margin-top: 20px;
-    margin-left: 20px;
-    text-align: center;
-    border: 2px solid #000;
+	width: 140px;
+	height: 70px;
+	margin-top: 20px;
+	margin-left: 20px;
+	text-align: center;
+	border: 2px solid #000;
 }
 
 fieldset legend {
-    text-align: left;
-    vertical-align: middle;
+	text-align: left;
+	vertical-align: middle;
 }
 
 fieldset button {
-    width: 50px;
-    height: 50px;
-    font-size: 25px;
-    margin: 0;
+	width: 50px;
+	height: 50px;
+	font-size: 25px;
+	margin: 0;
 }
 
 .guideTip {
-    background-color: #ffbd2e;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    z-index: 50;
-    font-size: 16px;
-    padding: 10px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    pointer-events: none;
-    transform: translateX(-50%);
+	background-color: #ffbd2e;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	z-index: 50;
+	font-size: 16px;
+	padding: 10px;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	pointer-events: none;
+	transform: translateX(-50%);
 }
 
 .hide {
-    display: none;
+	display: none;
 }
 
 .visibleNone {
-    visibility: hidden;
+	visibility: hidden;
 }
