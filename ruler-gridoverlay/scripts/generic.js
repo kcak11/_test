@@ -39,22 +39,25 @@ var zoomTheImage = function(scale) {
 	theImage.style.transformOrigin = "0 0";
 	theImage.style.transform = "scale(" + scale + ")";
 	var theImageStyle = getComputedStyle(theImage, null);
-	var left = !isNaN(parseInt(theImageStyle["left"], 10)) ? parseInt(theImageStyle["left"]) : 0;
-	var top = !isNaN(parseInt(theImageStyle["top"], 10)) ? parseInt(theImageStyle["top"]) : 0;
+	var left = !isNaN(parseFloat(theImageStyle["left"])) ? parseFloat(theImageStyle["left"]) : 0;
+	var top = !isNaN(parseFloat(theImageStyle["top"])) ? parseFloat(theImageStyle["top"]) : 0;
 	if (!theImage.getAttribute("data-left-position")) {
 		theImage.setAttribute("data-left-position", left);
 	}
 	if (!theImage.getAttribute("data-top-position")) {
 		theImage.setAttribute("data-top-position", top);
 	}
-	theImage.style.left = (parseInt(theImage.getAttribute("data-left-position"), 10) * scale) + "px";
-	theImage.style.top = (parseInt(theImage.getAttribute("data-top-position"), 10) * scale) + "px";
+	theImage.style.left = (parseFloat(theImage.getAttribute("data-left-position")) * scale) + "px";
+	theImage.style.top = (parseFloat(theImage.getAttribute("data-top-position")) * scale) + "px";
 };
 var doZoom = function(type) {
 	if (type === "+") {
 		zoomPercentage += zoomSteps;
 	} else {
 		zoomPercentage -= zoomSteps;
+		if (zoomPercentage < 10) {
+			zoomPercentage = 10;
+		}
 	}
 	var scale = convertZoomPercentToScale(zoomPercentage);
 	gridOverlayObject.zoom(scale);
@@ -103,16 +106,19 @@ var disableGuides = function() {
 	document.querySelector(".guideTip").classList.add("hide");
 };
 var createRulers = function() {
+	var topStartPoint = getComputedStyle(imgElem, null)["left"];
+	topStartPoint = !isNaN(parseInt(topStartPoint, 10)) ? parseInt(topStartPoint, 10) : 0;
+	var leftStartPoint = getComputedStyle(imgElem, null)["top"];
+	leftStartPoint = !isNaN(parseInt(leftStartPoint, 10)) ? parseInt(leftStartPoint, 10) : 0;
+
 	rulerBars.createRulers({
 		top : {
 			size : 2000,
-			startPoint : -55,
-			backgroundColor: "red"
+			startPoint : -topStartPoint,
 		},
 		left : {
 			size : 1400,
-			startPoint : -55,
-			backgroundColor: "green"
+			startPoint : -leftStartPoint,
 		},
 		element : imgElem
 	});
