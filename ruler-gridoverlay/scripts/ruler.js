@@ -396,9 +396,9 @@
 		if (this.rulerParent) {
 			this.rulerParent.classList.remove("noselect");
 		}
-		var rulers = document.querySelectorAll(".ruler");
-		[].forEach.call(rulers, function(ruler) {
-			ruler.parentNode.removeChild(ruler);
+		var rulerElements = document.querySelectorAll(".ruler, .rulerCornerBox");
+		[].forEach.call(rulerElements, function(rulerElem) {
+			rulerElem.parentNode.removeChild(rulerElem);
 		});
 		this.rulerBarsEnabled = false;
 		_global.rulerBarsConfig = null;
@@ -409,9 +409,9 @@
 	 * Show the hidden rulers by removing css class "invisible".
 	 */
 	RulerBars.prototype.showRulers = function() {
-		var rulers = document.querySelectorAll(".ruler");
-		[].forEach.call(rulers, function(ruler) {
-			ruler.classList.remove("invisible");
+		var rulerElements = document.querySelectorAll(".ruler, .rulerCornerBox");
+		[].forEach.call(rulerElements, function(rulerElem) {
+			rulerElem.classList.remove("invisible");
 		});
 	};
 
@@ -419,9 +419,9 @@
 	 * Hide the rulers by adding css class "invisible"
 	 */
 	RulerBars.prototype.hideRulers = function() {
-		var rulers = document.querySelectorAll(".ruler");
-		[].forEach.call(rulers, function(ruler) {
-			ruler.classList.add("invisible");
+		var rulerElements = document.querySelectorAll(".ruler, .rulerCornerBox");
+		[].forEach.call(rulerElements, function(rulerElem) {
+			rulerElem.classList.add("invisible");
 		});
 	};
 
@@ -545,6 +545,7 @@
 		this.rulerParent = _global.rulerBarsConfig.parent;
 
 		var rulerCorner = document.createElement("div");
+		rulerCorner.className = "rulerCornerBox";
 		rulerCorner.style.width = rulerCorner.style.height = (_global.RULER_THICKNESS - 2) + "px";
 		rulerCorner.style.backgroundColor = _global.rulerBarsConfig.backgroundColor;
 		rulerCorner.style.position = "absolute";

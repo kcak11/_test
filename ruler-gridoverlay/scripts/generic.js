@@ -60,8 +60,8 @@ var doZoom = function(type) {
 		}
 	}
 	var scale = convertZoomPercentToScale(zoomPercentage);
-	gridOverlayObject.zoom(scale);
 	zoomTheImage(scale);
+	gridOverlayObject.zoom(scale);
 	rulerBars.zoom(scale);
 	document.querySelector("#displayZoomValue").innerHTML = zoomPercentage;
 };

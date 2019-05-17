@@ -37,13 +37,18 @@
 			gridSize = Math.max(10, (this.gridScale * 10));
 			var width = element.offsetWidth;
 			var height = element.offsetHeight;
+			var elementStyles = getComputedStyle(element, null);
+			var left = parseFloat(elementStyles["left"]);
+			var top = parseFloat(elementStyles["top"]);
+			left = !isNaN(left) ? left : 0;
+			top = !isNaN(top) ? top : 0;
 			var gridBarContainer = document.createElement("div");
 			gridBarContainer.id = "gridBarContainer";
 			gridBarContainer.style.position = "absolute";
-			gridBarContainer.style.top = 0;
+			gridBarContainer.style.top = top + "px";
 			gridBarContainer.style.right = 0;
 			gridBarContainer.style.bottom = 0;
-			gridBarContainer.style.left = 0;
+			gridBarContainer.style.left = left + "px";
 			gridBarContainer.style.pointerEvents = "none";
 			gridBarContainer.style.boxSizing = "border-box";
 			for (var w = 0; w < width; w += gridSize) {
