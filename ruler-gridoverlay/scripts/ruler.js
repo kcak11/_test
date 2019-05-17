@@ -45,6 +45,16 @@
 			return function() {
 				return func.apply(ctx, arguments);
 			}
+		},
+		resetGlobal : function() {
+			global = {};
+			global.RULER_THICKNESS = 30;
+			global.topGuides = {};
+			global.leftGuides = {};
+			global.HORIZONTAL_TEMPORARY_GUIDE = document.createElement("div");
+			global.HORIZONTAL_TEMPORARY_GUIDE.className = "tempGuideHorizontal tempGuide invisible";
+			global.VERTICAL_TEMPORARY_GUIDE = document.createElement("div");
+			global.VERTICAL_TEMPORARY_GUIDE.className = "tempGuideVertical tempGuide invisible";
 		}
 	};
 
@@ -99,10 +109,7 @@
 		if (!(this instanceof RulerBars)) {
 			throw new Error("RulerBars is a constructor, use the \"new\" operator to create new instance.");
 		}
-		global.HORIZONTAL_TEMPORARY_GUIDE = document.createElement("div");
-		global.HORIZONTAL_TEMPORARY_GUIDE.className = "tempGuideHorizontal tempGuide invisible";
-		global.VERTICAL_TEMPORARY_GUIDE = document.createElement("div");
-		global.VERTICAL_TEMPORARY_GUIDE.className = "tempGuideVertical tempGuide invisible";
+		this.destroy();
 		registerDefaultCSS();
 		registerFunctionsWithContext(this);
 		document.addEventListener("mouseout", function(e) {
@@ -372,13 +379,16 @@
 	/**
 	 * Remove the rulers from DOM
 	 */
-	RulerBars.prototype.removeRulers = function() {
-		this.rulerParent.classList.remove("noselect");
+	RulerBars.prototype.destroy = function() {
+		if (this.rulerParent) {
+			this.rulerParent.classList.remove("noselect");
+		}
 		var rulers = document.querySelectorAll(".ruler");
 		[].forEach.call(rulers, function(ruler) {
 			ruler.parentNode.removeChild(ruler);
 		});
 		this.rulerBarsEnabled = false;
+		Util.resetGlobal();
 	};
 
 	/**
@@ -465,8 +475,8 @@
 		rulerZoomConfig += "\n.tempGuideVertical{transform-origin:0 0;height:" + verticalGuideLineSize + "px;transform:scale(" + guideLineThicknessScale + ",1);}";
 		rulerZoomConfig += "\n.horizontalGuideLine{transform-origin:0 0;width:" + horizontalGuideLineSize + "px;transform:scale(1," + guideLineThicknessScale + ");}";
 		rulerZoomConfig += "\n.tempGuideHorizontal{transform-origin:0 0;width:" + horizontalGuideLineSize + "px;transform:scale(1," + guideLineThicknessScale + ");}";
-		rulerZoomConfig += "\n.ruler.top .big:before{transform-origin:0 0;transform:scaleX(" + (1 / scale) + ");}";
-		rulerZoomConfig += "\n.ruler.left .big:before{transform-origin:0 0;transform:rotate(-90deg) scaleX(" + (1 / scale) + ");}";
+		rulerZoomConfig += "\n.ruler.top .big,.ruler.top .medium,.ruler.top .small{transform-origin:0 0;transform:scaleX(" + (1 / scale) + ");}";
+		rulerZoomConfig += "\n.ruler.left .big, .ruler.left .medium, .ruler.left .small{transform-origin:0 0;transform:scaleY(" + (1 / scale) + ");}";
 		Util.applyCSSRule(rulerZoomConfig, "rulerZoomConfig");
 
 		this.topRuler.style.transformOrigin = "0 0";
@@ -487,6 +497,7 @@
 		if (!cfg || !cfg.top || !cfg.left) {
 			return;
 		}
+		Util.resetGlobal();
 		var copiedCfg = Util.copyConfig(cfg);
 		copiedCfg.parent = copiedCfg.parent || document.querySelector("body");
 
