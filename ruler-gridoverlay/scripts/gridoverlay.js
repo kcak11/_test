@@ -1,6 +1,11 @@
 /**
- * Copyright(c) - 2019 Ashish's Web Author: K.C.Ashish Kumar https://kcak11.com
- * (or) https://ashishkumarkc.com Repository: https://github.com/kcak11/pens
+ * Copyright(c) - 2019 Ashish's Web
+ * 
+ * Author: K.C.Ashish Kumar
+ * 
+ * https://kcak11.com (or) https://ashishkumarkc.com
+ * 
+ * Repository: https://github.com/kcak11/pens
  */
 
 (function(w) {

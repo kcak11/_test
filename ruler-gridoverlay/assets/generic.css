@@ -9,6 +9,7 @@
 
 body {
 	font-family: Verdana;
+	background-color: rgb(128, 128, 128);
 }
 
 #container {
@@ -28,11 +29,12 @@ body {
 	position: relative;
 	z-index: 200;
 	background-color: rgba(255, 255, 255, 0.7);
-	padding: 10px;
-	padding-bottom: 30px;
 	width: 550px;
 	border-top-right-radius: 33px;
 	border-bottom-right-radius: 33px;
+	padding: 10px;
+	padding-bottom: 30px;
+	margin-top: 50px;
 }
 
 button {

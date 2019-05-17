@@ -1,13 +1,16 @@
 /**
- * Copyright(c) - 2019 Ashish's Web Author: K.C.Ashish Kumar https://kcak11.com
- * (or) https://ashishkumarkc.com Repository: https://github.com/kcak11/pens
+ * Copyright(c) - 2019 Ashish's Web
+ *
+ * Author: K.C.Ashish Kumar https://kcak11.com (or) https://ashishkumarkc.com
+ *
+ * Repository: https://github.com/kcak11/pens
  */
 
 (function(w) {
-	var global = {};
-	global.RULER_THICKNESS = 30;
-	global.topGuides = {};
-	global.leftGuides = {};
+	var _global = {};
+	_global.RULER_THICKNESS = 30;
+	_global.topGuides = {};
+	_global.leftGuides = {};
 
 	/**
 	 * Utility functions
@@ -28,7 +31,7 @@
 			}
 			document.querySelector("head").appendChild(stl);
 		},
-		copyConfig : function(config) {
+		createConfig : function(config) {
 			try {
 				return JSON.parse(JSON.stringify(config));
 			} catch (exjs) {
@@ -47,20 +50,20 @@
 			}
 		},
 		resetGlobal : function() {
-			global = {};
-			global.RULER_THICKNESS = 30;
-			global.topGuides = {};
-			global.leftGuides = {};
-			global.HORIZONTAL_TEMPORARY_GUIDE = document.createElement("div");
-			global.HORIZONTAL_TEMPORARY_GUIDE.className = "tempGuideHorizontal tempGuide invisible";
-			global.VERTICAL_TEMPORARY_GUIDE = document.createElement("div");
-			global.VERTICAL_TEMPORARY_GUIDE.className = "tempGuideVertical tempGuide invisible";
+			_global = {};
+			_global.RULER_THICKNESS = 30;
+			_global.topGuides = {};
+			_global.leftGuides = {};
+			_global.HORIZONTAL_TEMPORARY_GUIDE = document.createElement("div");
+			_global.HORIZONTAL_TEMPORARY_GUIDE.className = "tempGuideHorizontal tempGuide invisible";
+			_global.VERTICAL_TEMPORARY_GUIDE = document.createElement("div");
+			_global.VERTICAL_TEMPORARY_GUIDE.className = "tempGuideVertical tempGuide invisible";
 		}
 	};
 
 	/**
 	 * Guide constructor
-	 * 
+	 *
 	 * @evt: The event object
 	 * @config: The ruler config object
 	 * @ruler: The ruler DOM element
@@ -72,9 +75,9 @@
 		var _this = this;
 		this.side = config.side;
 		this.offsetProp = (this.side === "top") ? "offsetX" : "offsetY";
-		this.positionVal = Math.ceil(evt[this.offsetProp] - global.RULER_THICKNESS);
+		this.positionVal = Math.ceil(evt[this.offsetProp] - _global.RULER_THICKNESS);
 		this.guidePosition = this.positionVal + "px";
-		if (global[this.side + "Guides"][this.guidePosition]) {
+		if (_global[this.side + "Guides"][this.guidePosition]) {
 			return;
 		}
 		this.direction = (this.side === "top") ? "left" : "top";
@@ -82,11 +85,11 @@
 		this.guideLine.id = "guide_" + Util.getUniqueID();
 		this.guideLine.className = "rulerGuideLine " + ((this.side === "top") ? "verticalGuideLine" : "horizontalGuideLine");
 		this.guideLine.style[this.direction] = this.guidePosition;
-		global[this.side + "Guides"][(this.positionVal - 2) + "px"] = this;
-		global[this.side + "Guides"][(this.positionVal - 1) + "px"] = this;
-		global[this.side + "Guides"][this.positionVal + "px"] = this;
-		global[this.side + "Guides"][(this.positionVal + 1) + "px"] = this;
-		global[this.side + "Guides"][(this.positionVal + 2) + "px"] = this;
+		_global[this.side + "Guides"][(this.positionVal - 2) + "px"] = this;
+		_global[this.side + "Guides"][(this.positionVal - 1) + "px"] = this;
+		_global[this.side + "Guides"][this.positionVal + "px"] = this;
+		_global[this.side + "Guides"][(this.positionVal + 1) + "px"] = this;
+		_global[this.side + "Guides"][(this.positionVal + 2) + "px"] = this;
 		ruler.appendChild(this.guideLine);
 	};
 
@@ -95,11 +98,11 @@
 	 */
 	Guide.prototype.destroy = function() {
 		this.guideLine.parentNode.removeChild(this.guideLine);
-		delete global[this.side + "Guides"][(this.positionVal - 2) + "px"];
-		delete global[this.side + "Guides"][(this.positionVal - 1) + "px"];
-		delete global[this.side + "Guides"][this.positionVal + "px"];
-		delete global[this.side + "Guides"][(this.positionVal + 1) + "px"];
-		delete global[this.side + "Guides"][(this.positionVal + 2) + "px"];
+		delete _global[this.side + "Guides"][(this.positionVal - 2) + "px"];
+		delete _global[this.side + "Guides"][(this.positionVal - 1) + "px"];
+		delete _global[this.side + "Guides"][this.positionVal + "px"];
+		delete _global[this.side + "Guides"][(this.positionVal + 1) + "px"];
+		delete _global[this.side + "Guides"][(this.positionVal + 2) + "px"];
 	};
 
 	/**
@@ -115,9 +118,9 @@
 		document.addEventListener("mouseout", function(e) {
 			var from = e.relatedTarget || e.toElement;
 			if (!from || from.nodeName === "HTML") {
-				if (global.activeGuide) {
-					global.activeGuide.destroy();
-					global.activeGuide = null;
+				if (_global.activeGuide) {
+					_global.activeGuide.destroy();
+					_global.activeGuide = null;
 				}
 			}
 		}, false);
@@ -134,7 +137,7 @@
 
 	/**
 	 * Bind the functions with the RulerBars context.
-	 * 
+	 *
 	 * @ctx: The RulerBars context
 	 */
 	var registerFunctionsWithContext = function(ctx) {
@@ -169,18 +172,14 @@
 
 	/**
 	 * Create a Ruler.
-	 * 
+	 *
 	 * @config: object
 	 * @config.size: The desired length of the ruler in pixels, default is 100.
-	 * @config.unitSize: The size of each unit in the ruler, default is 10.
 	 * @config.side: "top" or "left", default is "top".
 	 * @config.startPoint: The startPoint for the ruler, default is 0.
-	 * @config.foregroundColor: The color of units on the ruler, default #000
-	 *                          (black).
-	 * @config.backgroundColor: The background color of the ruler, default #fff
-	 *                          (white).
-	 * @config.tempGuideColor: The color of temporary guide line, default
-	 *                         #ffaaab (Cornflower Lilac).
+	 * @config.foregroundColor: The color of units on the ruler, default #000 (black).
+	 * @config.backgroundColor: The background color of the ruler, default #fff (white).
+	 * @config.tempGuideColor: The color of temporary guide line, default #ffaaab (Cornflower Lilac).
 	 * @config.guideColor: The color of guide line, default #ff0400 (Red).
 	 */
 	var getRuler = function(config) {
@@ -198,7 +197,7 @@
 		if (isNaN(config.size) || config.size < 0) {
 			throw new Error("Invalid size parameter specified " + config.size + ". Expected positive number.");
 		}
-		config.unitSize = parseInt(config.unitSize, 10) || 10;
+		config.unitSize = 10;
 		if (isNaN(config.unitSize) || config.unitSize < 0) {
 			throw new Error("Invalid unitSize parameter specified " + config.unitSize + ". Expected positive number.");
 		}
@@ -206,19 +205,12 @@
 		if (isNaN(config.startPoint)) {
 			throw new Error("Invalid startPoint specified, expected number.");
 		}
-		if (config.startPoint % 10 !== 0) {
-			var diff = 10 - (Math.abs(config.startPoint) % 10);
-			if (config.startPoint < 0) {
-				config.startPoint -= diff;
-			} else {
-				config.startPoint -= 10 - diff;
-			}
-		}
-		var rulerThickness = global.RULER_THICKNESS;
+		var startPointDelta = config.startPoint % 10;
+		var rulerThickness = _global.RULER_THICKNESS;
 		var ruler = document.createElement("div");
 		ruler.className = "rulerBar ruler " + config.side;
 		var rulerBG = document.createElement("div");
-		rulerBG.className = "rulerBG";
+		rulerBG.className = "rulerBG rulerBG_" + config.side;
 		rulerBG.style.backgroundColor = config.backgroundColor;
 		ruler.appendChild(rulerBG);
 		var big = document.createElement("div");
@@ -229,13 +221,11 @@
 		small.className = "small";
 		var units = [ big, medium, small ];
 		var iterations = Math.ceil(config.size / 10);
-		for (var i = (config.startPoint / 10), ctr = 0; i <= iterations; i++) {
+		for (var i = Math.ceil(config.startPoint / 10), ctr = 0; i <= iterations; i++) {
 			var unit;
 			if (Math.abs(i) % 10 === 0) {
 				unit = big.cloneNode(true);
-				if (true || Math.abs(i) > 0) {
-					unit.setAttribute("unit-value", (i * 10));
-				}
+				unit.setAttribute("unit-value", (i * 10));
 			} else if (Math.abs(i) % 2 === 1) {
 				unit = small.cloneNode(true);
 			} else if (Math.abs(i) % 2 === 0) {
@@ -246,12 +236,16 @@
 			ctr++;
 		}
 		ruler.style[config.side === "top" ? "width" : "height"] = ((ctr * config.unitSize) - config.unitSize) + "px";
+
+		ruler.style[config.side === "top" ? "left" : "top"] = (rulerThickness - startPointDelta) + "px";
+
 		rulerBG.style[config.side === "top" ? "width" : "height"] = ((ctr * config.unitSize) - config.unitSize + rulerThickness) + "px";
 		rulerBG.style[config.side === "top" ? "height" : "width"] = rulerThickness + "px";
 		rulerBG.style[config.side === "top" ? "top" : "left"] = (-1 * rulerThickness) + "px";
 		rulerBG.style[config.side === "top" ? "left" : "top"] = (-1 * rulerThickness) + "px";
 
 		var colorDefinitionTop = ".ruler.top, .ruler.top .big, .ruler.top .medium, .ruler.top .small{border-color: {{fgColor}};color: {{fgColor}};}";
+    colorDefinitionTop += ".rulerBG_top:before{content:\" \";position:absolute;left:-100px;top:" + (-1 * rulerThickness) + "px;height:" + rulerThickness + "px;width:500px;}";
 		var colorDefinitionLeft = ".ruler.left, .ruler.left .big, .ruler.left .medium, .ruler.left .small  {border-color: {{fgColor}};color: {{fgColor}};}";
 		var colorDefinition = (config.side === "top") ? colorDefinitionTop : colorDefinitionLeft;
 		colorDefinition = colorDefinition.split("{{fgColor}}").join(config.foregroundColor);
@@ -259,118 +253,120 @@
 
 		var guideDefinition;
 		if (config.side === "left") {
-			guideDefinition = ".tempGuideHorizontal{border:none;transform:scaleY(2.0);border-top:1px solid " + config.tempGuideColor + ";pointer-events:none;position:absolute;left:-" + global.RULER_THICKNESS + "px;top:0;width:" + (this.TOP_RULER_SIZE + global.RULER_THICKNESS) + "px;}";
-			guideDefinition += "\n.horizontalGuideLine{border:none;transform:scaleY(2.0);border-top:1px solid " + config.guideColor + ";pointer-events:none;position:absolute;left:-" + global.RULER_THICKNESS + "px;top:0;width:" + (this.TOP_RULER_SIZE + global.RULER_THICKNESS) + "px;}";
+			guideDefinition = ".tempGuideHorizontal{border:none;transform:scaleY(2.0);border-top:1px solid " + config.tempGuideColor + ";pointer-events:none;position:absolute;left:-" + _global.RULER_THICKNESS + "px;top:0;width:" + (this.TOP_RULER_SIZE + _global.RULER_THICKNESS) + "px;}";
+			guideDefinition += "\n.horizontalGuideLine{border:none;transform:scaleY(2.0);border-top:1px solid " + config.guideColor + ";pointer-events:none;position:absolute;left:-" + _global.RULER_THICKNESS + "px;top:0;width:" + (this.TOP_RULER_SIZE + _global.RULER_THICKNESS) + "px;}";
 		} else {
-			guideDefinition = ".tempGuideVertical{border:none;transform:scaleX(2.0);border-left:1px solid " + config.tempGuideColor + ";pointer-events:none;position:absolute;left:0;top:-" + global.RULER_THICKNESS + "px;height:" + (this.LEFT_RULER_SIZE + global.RULER_THICKNESS) + "px;}";
-			guideDefinition += "\n.verticalGuideLine{border:none;transform:scaleX(2.0);border-left:1px solid " + config.guideColor + ";pointer-events:none;position:absolute;left:0;top:-" + global.RULER_THICKNESS + "px;height:" + (this.LEFT_RULER_SIZE + global.RULER_THICKNESS) + "px;}";
+			guideDefinition = ".tempGuideVertical{border:none;transform:scaleX(2.0);border-left:1px solid " + config.tempGuideColor + ";pointer-events:none;position:absolute;left:0;top:-" + _global.RULER_THICKNESS + "px;height:" + (this.LEFT_RULER_SIZE + _global.RULER_THICKNESS) + "px;}";
+			guideDefinition += "\n.verticalGuideLine{border:none;transform:scaleX(2.0);border-left:1px solid " + config.guideColor + ";pointer-events:none;position:absolute;left:0;top:-" + _global.RULER_THICKNESS + "px;height:" + (this.LEFT_RULER_SIZE + _global.RULER_THICKNESS) + "px;}";
 		}
 		Util.applyCSSRule(guideDefinition, "guideDefinition_" + config.side);
 
-		ruler.appendChild((config.side === "top") ? global.VERTICAL_TEMPORARY_GUIDE : global.HORIZONTAL_TEMPORARY_GUIDE);
+		ruler.appendChild((config.side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE);
 
 		ruler.addEventListener("mousedown", function(e) {
-			rulerMouseDown(e, ruler, config);
+			rulerMouseDown(e, config, ruler);
 		}, false);
 		ruler.addEventListener("mousemove", function(e) {
-			rulerMouseMove(e, ruler, config);
+			rulerMouseMove(e, config, ruler);
 		}, false);
 		ruler.addEventListener("mouseup", function(e) {
-			rulerMouseUp(e, ruler, config);
+			rulerMouseUp(e, config, ruler);
 		}, false);
 		ruler.addEventListener("mouseover", function(e) {
-			rulerMouseOver(e, ruler, config);
+			rulerMouseOver(e, config, ruler);
 		}, false);
 		ruler.addEventListener("mouseout", function(e) {
-			rulerMouseOut(e, ruler, config);
+			rulerMouseOut(e, config, ruler);
 		}, false);
 		ruler.addEventListener("click", function(e) {
-			rulerClick(e, ruler, config);
+			rulerClick(e, config, ruler);
 		}, false);
 
 		return ruler;
 	};
 
-	var adjustGuidePosition = function(e, ruler, config, rulerHovered) {
+	var adjustGuidePosition = function(e, config, ruler, rulerHovered) {
 		var offsetProp = (config.side === "top") ? "offsetX" : "offsetY";
 		var direction = (config.side === "top") ? "left" : "top";
-		var tmpGuide = (config.side === "top") ? global.VERTICAL_TEMPORARY_GUIDE : global.HORIZONTAL_TEMPORARY_GUIDE;
-		var offset = (rulerHovered) ? global.RULER_THICKNESS : 0;
+		var tmpGuide = (config.side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE;
+		var offset = (rulerHovered) ? _global.RULER_THICKNESS : 0;
 		var guidePosition = Math.ceil(e[offsetProp] - offset);
+		var rangeStart = _global.rulerBarsConfig[config.side]["startPoint"] || 0;
 		tmpGuide.classList.add("invisible");
-		if (global.activeGuide) {
-			global.activeGuide.guideLine.style[direction] = guidePosition + "px";
-			if (guidePosition < 0) {
-				global.activeGuide.guideLine.classList.add("invisible");
+		if (_global.activeGuide) {
+			_global.activeGuide.guideLine.style[direction] = guidePosition + "px";
+			if (guidePosition < Math.abs(rangeStart)) {
+				_global.activeGuide.guideLine.classList.add("invisible");
 				ruler.classList.remove("guideEnabled");
 			} else {
-				global.activeGuide.guideLine.classList.remove("invisible");
+				_global.activeGuide.guideLine.classList.remove("invisible");
 				ruler.classList.add("guideEnabled");
 			}
 		}
 	};
 
-	var rulerMouseDown = function(e, ruler, config) {
+	var rulerMouseDown = function(e, config, ruler) {
 		this.rulerParent.classList.add("noselect");
 		if (!this.guides) {
 			return;
 		}
 		var offsetProp = (config.side === "top") ? "offsetX" : "offsetY";
-		var guidePosition = Math.ceil(e[offsetProp] - global.RULER_THICKNESS) + "px";
-		if (global[config.side + "Guides"][guidePosition]) {
-			global.activeGuide = global[config.side + "Guides"][guidePosition];
+		var guidePosition = Math.ceil(e[offsetProp] - _global.RULER_THICKNESS) + "px";
+		if (_global[config.side + "Guides"][guidePosition]) {
+			_global.activeGuide = _global[config.side + "Guides"][guidePosition];
 		}
 	};
 
-	var rulerMouseMove = function(e, ruler, config) {
+	var rulerMouseMove = function(e, config, ruler) {
 		if (!this.guides) {
 			return;
 		}
-		var tmpGuide = (config.side === "top") ? global.VERTICAL_TEMPORARY_GUIDE : global.HORIZONTAL_TEMPORARY_GUIDE;
-		if (global.activeGuide) {
-			adjustGuidePosition(e, ruler, config, true);
+		var tmpGuide = (config.side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE;
+		if (_global.activeGuide) {
+			adjustGuidePosition(e, config, ruler, true);
 		} else {
 			tmpGuide.classList.remove("invisible");
 			showTemporaryGuide(e, config.side);
 		}
 	};
 
-	var rulerMouseUp = function(e, ruler, config) {
+	var rulerMouseUp = function(e, config, ruler) {
 		this.rulerParent.classList.remove("noselect");
 		if (!this.guides) {
 			return;
 		}
-		if (global.activeGuide) {
-			global.activeGuide.destroy();
-			global.activeGuide = null;
-			if ((config.side === "top" && Math.ceil(e.offsetX) < global.RULER_THICKNESS) || (config.side === "left" && Math.ceil(e.offsetY) < global.RULER_THICKNESS)) {
+		if (_global.activeGuide) {
+			_global.activeGuide.destroy();
+			_global.activeGuide = null;
+			if ((config.side === "top" && Math.ceil(e.offsetX) < (_global.RULER_THICKNESS + Math.abs(rangeStart))) || (config.side === "left" && Math.ceil(e.offsetY) < (_global.RULER_THICKNESS + Math.abs(rangeStart)))) {
 				return;
 			}
 			new Guide(e, config, ruler);
 		}
 	};
 
-	var rulerMouseOver = function(e, ruler, config) {
-		if (global.activeGuide && !ruler.querySelector("#" + global.activeGuide.guideLine.id)) {
-			global.activeGuide.destroy();
-			global.activeGuide = null;
+	var rulerMouseOver = function(e, config, ruler) {
+		if (_global.activeGuide && !ruler.querySelector("#" + _global.activeGuide.guideLine.id)) {
+			_global.activeGuide.destroy();
+			_global.activeGuide = null;
 		}
 	};
 
-	var rulerMouseOut = function(e, ruler, config) {
+	var rulerMouseOut = function(e, config, ruler) {
 		this.rulerParent.classList.remove("noselect");
-		if (global.activeGuide) {
-			adjustGuidePosition(e, ruler, config, false);
+		if (_global.activeGuide) {
+			adjustGuidePosition(e, config, ruler, false);
 		}
-		var tmpGuide = (config.side === "top") ? global.VERTICAL_TEMPORARY_GUIDE : global.HORIZONTAL_TEMPORARY_GUIDE;
+		var tmpGuide = (config.side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE;
 		tmpGuide.classList.add("invisible");
 	};
 
-	var rulerClick = function(e, ruler, config) {
+	var rulerClick = function(e, config, ruler) {
 		if (!this.guides) {
 			return;
 		}
-		if ((config.side === "top" && Math.ceil(e.offsetX) < global.RULER_THICKNESS) || (config.side === "left" && Math.ceil(e.offsetY) < global.RULER_THICKNESS)) {
+		var rangeStart = _global.rulerBarsConfig[config.side]["startPoint"] || 0;
+		if ((config.side === "top" && Math.ceil(e.offsetX) < (_global.RULER_THICKNESS + Math.abs(rangeStart))) || (config.side === "left" && Math.ceil(e.offsetY) < (_global.RULER_THICKNESS + Math.abs(rangeStart)))) {
 			return;
 		}
 		new Guide(e, config, ruler);
@@ -388,6 +384,7 @@
 			ruler.parentNode.removeChild(ruler);
 		});
 		this.rulerBarsEnabled = false;
+		_global.rulerBarsConfig = null;
 		Util.resetGlobal();
 	};
 
@@ -441,17 +438,18 @@
 		if (!this.guides) {
 			return;
 		}
-		var tmpGuide = (side === "top") ? global.VERTICAL_TEMPORARY_GUIDE : global.HORIZONTAL_TEMPORARY_GUIDE;
+		var tmpGuide = (side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE;
 		var currentRuler = (side === "top") ? this.topRuler : this.leftRuler;
 		var direction = (side === "top") ? "left" : "top";
 		var offsetProp = (side === "top") ? "offsetX" : "offsetY";
+		var rangeStart = _global.rulerBarsConfig[side]["startPoint"] || 0;
 		tmpGuide.classList.remove("invisible");
 
-		tmpGuide.style[direction] = Math.ceil(evt[offsetProp] - global.RULER_THICKNESS) + "px";
-		if (Math.ceil(evt[offsetProp] - global.RULER_THICKNESS) < 0) {
+		tmpGuide.style[direction] = Math.ceil(evt[offsetProp] - _global.RULER_THICKNESS) + "px";
+		if (Math.ceil(evt[offsetProp] - _global.RULER_THICKNESS) < Math.abs(rangeStart)) {
 			tmpGuide.classList.add("invisible");
 		}
-		if (Math.ceil(evt[offsetProp]) < global.RULER_THICKNESS) {
+		if (Math.ceil(evt[offsetProp]) < _global.RULER_THICKNESS) {
 			currentRuler.classList.remove("guideEnabled");
 		} else {
 			currentRuler.classList.add("guideEnabled");
@@ -467,8 +465,8 @@
 		}
 		/* default thickness scale = 2 */
 		var guideLineThicknessScale = (2 / scale);
-		var horizontalGuideLineSize = (this.TOP_RULER_SIZE * scale) + global.RULER_THICKNESS;
-		var verticalGuideLineSize = (this.LEFT_RULER_SIZE * scale) + global.RULER_THICKNESS;
+		var horizontalGuideLineSize = (this.TOP_RULER_SIZE * scale) + _global.RULER_THICKNESS;
+		var verticalGuideLineSize = (this.LEFT_RULER_SIZE * scale) + _global.RULER_THICKNESS;
 
 		var rulerZoomConfig = "";
 		rulerZoomConfig += ".verticalGuideLine{transform-origin:0 0;height:" + verticalGuideLineSize + "px;transform:scale(" + guideLineThicknessScale + ",1);}";
@@ -487,33 +485,38 @@
 
 	/**
 	 * Create the top & left rulers by supplying a configuration object.
-	 * 
+	 *
 	 * @cfg: configuration for creating the rulers.
 	 * @cfg.top: Configuration for Top Ruler See config param for getRuler()
 	 * @cfg.left: Configuration for Left Ruler See config param for getRuler()
 	 * @cfg.parent: The parent container where the Rulers need to be appended.
+	 * @cfg.element: The element of interest for the Ruler, helps in defining the outer boundaries for the Guide.
 	 */
 	RulerBars.prototype.createRulers = function(cfg) {
 		if (!cfg || !cfg.top || !cfg.left) {
 			return;
 		}
 		Util.resetGlobal();
-		var copiedCfg = Util.copyConfig(cfg);
-		copiedCfg.parent = copiedCfg.parent || document.querySelector("body");
+		if (cfg.element && typeof cfg.element.offsetWidth === "number" && typeof cfg.element.offsetHeight === "number") {
+			_global.rulerMaxRight = cfg.element.offsetWidth;
+			_global.rulerMaxBottom = cfg.element.offsetHeight;
+		}
+		_global.rulerBarsConfig = Util.createConfig(cfg);
+		_global.rulerBarsConfig.parent = _global.rulerBarsConfig.parent || document.querySelector("body");
 
-		this.TOP_RULER_SIZE = copiedCfg.top.size;
-		this.LEFT_RULER_SIZE = copiedCfg.left.size;
+		this.TOP_RULER_SIZE = _global.rulerBarsConfig.top.size;
+		this.LEFT_RULER_SIZE = _global.rulerBarsConfig.left.size;
 
-		copiedCfg.top.side = "top";
-		copiedCfg.left.side = "left";
+		_global.rulerBarsConfig.top.side = "top";
+		_global.rulerBarsConfig.left.side = "left";
 
-		this.topRuler = getRuler(copiedCfg.top);
-		this.leftRuler = getRuler(copiedCfg.left);
+		this.topRuler = getRuler(_global.rulerBarsConfig.top);
+		this.leftRuler = getRuler(_global.rulerBarsConfig.left);
 
-		this.rulerParent = copiedCfg.parent;
+		this.rulerParent = _global.rulerBarsConfig.parent;
 
-		copiedCfg.parent.appendChild(this.topRuler);
-		copiedCfg.parent.appendChild(this.leftRuler);
+		_global.rulerBarsConfig.parent.appendChild(this.topRuler);
+		_global.rulerBarsConfig.parent.appendChild(this.leftRuler);
 		this.rulerBarsEnabled = true;
 	};
 

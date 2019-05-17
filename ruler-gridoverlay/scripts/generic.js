@@ -1,6 +1,9 @@
 /**
- * Copyright(c) - 2019 Ashish's Web Author: K.C.Ashish Kumar https://kcak11.com
- * (or) https://ashishkumarkc.com
+ * Copyright(c) - 2019 Ashish's Web
+ * 
+ * Author: K.C.Ashish Kumar
+ * 
+ * https://kcak11.com (or) https://ashishkumarkc.com
  */
 
 var zoomPercentage = 100;
@@ -35,6 +38,17 @@ var zoomTheImage = function(scale) {
 	var theImage = document.querySelector("#imageContainer img");
 	theImage.style.transformOrigin = "0 0";
 	theImage.style.transform = "scale(" + scale + ")";
+	var theImageStyle = getComputedStyle(theImage, null);
+	var left = !isNaN(parseInt(theImageStyle["left"], 10)) ? parseInt(theImageStyle["left"]) : 0;
+	var top = !isNaN(parseInt(theImageStyle["top"], 10)) ? parseInt(theImageStyle["top"]) : 0;
+	if (!theImage.getAttribute("data-left-position")) {
+		theImage.setAttribute("data-left-position", left);
+	}
+	if (!theImage.getAttribute("data-top-position")) {
+		theImage.setAttribute("data-top-position", top);
+	}
+	theImage.style.left = (parseInt(theImage.getAttribute("data-left-position"), 10) * scale) + "px";
+	theImage.style.top = (parseInt(theImage.getAttribute("data-top-position"), 10) * scale) + "px";
 };
 var doZoom = function(type) {
 	if (type === "+") {
@@ -91,11 +105,23 @@ var disableGuides = function() {
 var createRulers = function() {
 	rulerBars.createRulers({
 		top : {
-			size : 2000
+			size : 2000,
+			startPoint : -55,
+			backgroundColor: "red"
 		},
 		left : {
-			size : 1400
-		}
+			size : 1400,
+			startPoint : -55,
+			backgroundColor: "green"
+		},
+		element : imgElem
 	});
 };
 createRulers();
+
+/* Enable the Guides on Page Load */
+enableGuides();
+
+/* Setting Page Load Zoom to 80% Hence invoking doZoom("-") 2 times */
+doZoom("-");
+doZoom("-");
