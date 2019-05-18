@@ -134,6 +134,7 @@ var toggleClearGuidesButton = function() {
 	}, 200);
 };
 var createRulers = function() {
+	var scale = convertZoomPercentToScale(zoomPercentage);
 	var topStartPoint = getComputedStyle(imgElem, null)["left"];
 	topStartPoint = !isNaN(parseInt(topStartPoint, 10)) ? parseInt(topStartPoint, 10) : 0;
 	var leftStartPoint = getComputedStyle(imgElem, null)["top"];
@@ -142,22 +143,50 @@ var createRulers = function() {
 	rulerBars.createRulers({
 		top : {
 			size : 2000,
-			startPoint : -topStartPoint
+			startPoint : Math.ceil(-topStartPoint / scale)
 		},
 		left : {
 			size : 1400,
-			startPoint : -leftStartPoint
+			startPoint : Math.ceil(-leftStartPoint / scale)
 		},
 		element : imgElem,
 		zIndex : 150
 	});
 };
 
-/**
- * Run on Page Load
- */
+var pan = function(left, top) {
+	var scale = convertZoomPercentToScale(zoomPercentage);
+	var imgElem = document.querySelector("#imageContainer img");
+	imgElem.style.left = left + "px";
+	imgElem.style.top = top + "px";
+	imgElem.removeAttribute("data-left-position");
+	imgElem.removeAttribute("data-top-position");
+	zoomTheImage(scale);
+	gridOverlayObject.zoom(scale);
 
+	var topStartPoint = getComputedStyle(imgElem, null)["left"];
+	topStartPoint = !isNaN(parseInt(topStartPoint, 10)) ? parseInt(topStartPoint, 10) : 0;
+	var leftStartPoint = getComputedStyle(imgElem, null)["top"];
+	leftStartPoint = !isNaN(parseInt(leftStartPoint, 10)) ? parseInt(leftStartPoint, 10) : 0;
+
+	rulerBars.updateRulers({
+		top : {
+			size : 2000,
+			startPoint : Math.ceil(-topStartPoint / scale)
+		},
+		left : {
+			size : 1400,
+			startPoint : Math.ceil(-leftStartPoint / scale)
+		},
+		element : imgElem,
+		zIndex : 150
+	});
+};
+
+/* Create Rulers on Page Load */
 createRulers();
+
+/* Check and toggle the "Clear All Guides" Button */
 toggleClearGuidesButton();
 
 /* Enable the Guides on Page Load */
@@ -166,3 +195,4 @@ enableGuides();
 /* Setting Page Load Zoom to 80% Hence invoking doZoom("-") 2 times */
 doZoom("-");
 doZoom("-");
+

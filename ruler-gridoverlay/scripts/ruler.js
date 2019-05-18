@@ -7,11 +7,15 @@
  */
 
 (function(w) {
+	/* _global: global storage of Ruler related data. */
 	var _global = {};
 	_global.RULER_THICKNESS = 30;
 	_global.topGuides = {};
 	_global.leftGuides = {};
 	_global.UNSET = "UNSET";
+
+	/* _initialSettings: storing the initial data for comparison when calling updateRulers. */
+	var _initialSettings = undefined;
 
 	/**
 	 * Utility functions
@@ -79,10 +83,11 @@
 		var startPoint = _global.rulerBarsConfig[config.side].startPoint;
 		this.side = config.side;
 		this.offsetProp = (this.side === "top") ? "offsetX" : "offsetY";
-		this.positionVal = Math.ceil(evt[this.offsetProp] - _global.RULER_THICKNESS) + ((_global.rulerBarsConfig[this.side].startPoint % 10) - _global.unitSize);
+		this[this.offsetProp] = Math.ceil(evt[this.offsetProp]);
+		this.positionVal = Math.ceil(evt[this.offsetProp] - _global.RULER_THICKNESS) + ((_global.rulerBarsConfig[this.side].startPoint % _global.unitSize) - _global.unitSize);
 		this.guidePosition = this.positionVal + "px";
 		var entry = this.positionVal + startPoint + _global.unitSize;
-		if (_global[this.side + "Guides"][entry + "px"] || entry < (_global.unitSize + (startPoint % 10))) {
+		if (_global[this.side + "Guides"][entry + "px"] || entry < (_global.unitSize + (startPoint % _global.unitSize))) {
 			return;
 		}
 		this.direction = (this.side === "top") ? "left" : "top";
@@ -91,11 +96,22 @@
 		this.guideLine.className = "rulerGuideLine " + ((this.side === "top") ? "verticalGuideLine" : "horizontalGuideLine");
 		this.guideLine.style[this.direction] = this.guidePosition;
 		var entry = this.positionVal + startPoint + _global.unitSize;
-		_global[this.side + "Guides"][(entry - 2) + "px"] = this;
-		_global[this.side + "Guides"][(entry - 1) + "px"] = this;
-		_global[this.side + "Guides"][entry + "px"] = this;
-		_global[this.side + "Guides"][(entry + 1) + "px"] = this;
-		_global[this.side + "Guides"][(entry + 2) + "px"] = this;
+		_global[this.side + "Guides"][(entry - 2) + "px"] = {
+			"guide" : this
+		};
+		_global[this.side + "Guides"][(entry - 1) + "px"] = {
+			"guide" : this
+		};
+		_global[this.side + "Guides"][entry + "px"] = {
+			"guide" : this,
+			setByUser : true
+		};
+		_global[this.side + "Guides"][(entry + 1) + "px"] = {
+			"guide" : this
+		};
+		_global[this.side + "Guides"][(entry + 2) + "px"] = {
+			"guide" : this
+		};
 		ruler.appendChild(this.guideLine);
 	};
 
@@ -205,7 +221,7 @@
 		if (isNaN(config.startPoint)) {
 			throw new Error("Invalid startPoint specified, expected number.");
 		}
-		var startPointDelta = config.startPoint % 10;
+		var startPointDelta = config.startPoint % _global.unitSize;
 		var rulerThickness = _global.RULER_THICKNESS;
 		var ruler = document.createElement("div");
 		ruler.className = "rulerBar ruler " + config.side;
@@ -220,12 +236,12 @@
 		var small = document.createElement("div");
 		small.className = "small";
 		var units = [ big, medium, small ];
-		var iterations = Math.ceil(config.size / 10);
-		for (var i = Math.ceil(config.startPoint / 10), ctr = 0; i <= iterations; i++) {
+		var iterations = Math.ceil(config.size / _global.unitSize);
+		for (var i = Math.ceil(config.startPoint / _global.unitSize), ctr = 0; i <= iterations; i++) {
 			var unit;
-			if (Math.abs(i) % 10 === 0) {
+			if (Math.abs(i) % _global.unitSize === 0) {
 				unit = big.cloneNode(true);
-				unit.setAttribute("unit-value", (i * 10));
+				unit.setAttribute("unit-value", (i * _global.unitSize));
 			} else if (Math.abs(i) % 2 === 1) {
 				unit = small.cloneNode(true);
 			} else if (Math.abs(i) % 2 === 0) {
@@ -293,7 +309,7 @@
 		var direction = (config.side === "top") ? "left" : "top";
 		var tmpGuide = (config.side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE;
 		var offset = (rulerHovered) ? _global.RULER_THICKNESS : 0;
-		var guidePosition = Math.ceil(e[offsetProp] - offset) + ((_global.rulerBarsConfig[config.side].startPoint % 10) - _global.unitSize);
+		var guidePosition = Math.ceil(e[offsetProp] - offset) + ((_global.rulerBarsConfig[config.side].startPoint % _global.unitSize) - _global.unitSize);
 
 		var ranges = getGuideRange(config.side);
 		var rangeStart = ranges[0];
@@ -302,7 +318,7 @@
 		tmpGuide.classList.add("invisible");
 		if (_global.activeGuide) {
 			_global.activeGuide.guideLine.style[direction] = guidePosition + "px";
-			if (guidePosition < rangeStart || (rangeEnd !== _global.UNSET && guidePosition > rangeEnd)) {
+			if (guidePosition < rangeStart || (rangeEnd !== _global.UNSET && guidePosition > (rangeEnd - (rangeStart % _global.unitSize)))) {
 				_global.activeGuide.guideLine.classList.add("invisible");
 				ruler.classList.remove("guideEnabled");
 			} else {
@@ -319,9 +335,9 @@
 		}
 		var offsetProp = (config.side === "top") ? "offsetX" : "offsetY";
 		var startPoint = _global.rulerBarsConfig[config.side].startPoint;
-		var guidePosition = Math.ceil(e[offsetProp] - _global.RULER_THICKNESS) + startPoint + (startPoint % 10) + "px";
+		var guidePosition = Math.ceil(e[offsetProp] - _global.RULER_THICKNESS) + startPoint + (startPoint % _global.unitSize) + "px";
 		if (_global[config.side + "Guides"][guidePosition]) {
-			_global.activeGuide = _global[config.side + "Guides"][guidePosition];
+			_global.activeGuide = _global[config.side + "Guides"][guidePosition].guide;
 		}
 	};
 
@@ -521,7 +537,7 @@
 		var other = (side === "top") ? "left" : "top";
 		tmpGuide.classList.remove("invisible");
 
-		var adjustedPosition = (_global.rulerBarsConfig[side].startPoint % 10) - _global.unitSize;
+		var adjustedPosition = (_global.rulerBarsConfig[side].startPoint % _global.unitSize) - _global.unitSize;
 		tmpGuide.style[direction] = Math.ceil(evt[offsetProp] - _global.RULER_THICKNESS + adjustedPosition) + "px";
 
 		var currentPosition = (Math.ceil(evt[offsetProp] - _global.RULER_THICKNESS) - _global.unitSize);
@@ -561,6 +577,7 @@
 		this.topRuler.style.transform = "scaleX(" + scale + ")";
 		this.leftRuler.style.transformOrigin = "0 0";
 		this.leftRuler.style.transform = "scaleY(" + scale + ")";
+		_global.zoomVal = scale || 1;
 	};
 
 	/**
@@ -575,6 +592,72 @@
 		} catch (exjs) {
 			return _global.rulerBarsConfig;
 		}
+	};
+
+	/**
+	 * Update the top & left rulers by supplying a configuration object.
+	 * 
+	 * @cfg: configuration for updating the rulers - same as the cfg for createRulers
+	 */
+	RulerBars.prototype.updateRulers = function(cfg) {
+		if (!this.rulerBarsEnabled) {
+			throw new Error("RulerBars does not exist, use createRulers instead of updateRulers");
+		}
+		var initialTopStartPoint = _initialSettings.top.startPoint || 0;
+		var initialLeftStartPoint = _initialSettings.left.startPoint || 0;
+		var _cachedTopGuides = _global.topGuides;
+		var _cachedLeftGuides = _global.leftGuides;
+		var _cachedZoomVal = _global.zoomVal || 1;
+		var _cachedTopStartPoint = _global.rulerBarsConfig.top.startPoint || 0;
+		var _cachedLeftStartPoint = _global.rulerBarsConfig.left.startPoint || 0;
+
+		this.createRulers(cfg);
+
+		var topGuide, leftGuide, delta, simulatedEvent;
+		var topStartPoint = cfg.top.startPoint || 0;
+		var leftStartPoint = cfg.left.startPoint || 0;
+		for (topGuide in _cachedTopGuides) {
+			var guideEntry = _cachedTopGuides[topGuide];
+			if (guideEntry && guideEntry.setByUser) {
+
+				delta = _cachedTopStartPoint - topStartPoint;
+				if (_initialSettings.top.startPoint > 0 && ((_initialSettings.top.startPoint % 10) === 0)) {
+					delta = delta - _global.unitSize;
+				}
+				if (_cachedTopStartPoint < 0 && topStartPoint > 0) {
+					delta = delta - _global.unitSize;
+				}
+				if (_cachedTopStartPoint > 0 && topStartPoint < 0) {
+					delta = delta + _global.unitSize;
+				}
+				simulatedEvent = {};
+				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
+				new Guide(simulatedEvent, _global.rulerBarsConfig.top, this.topRuler);
+			}
+		}
+		_initialSettings.top.startPoint = 0;
+
+		for (leftGuide in _cachedLeftGuides) {
+			var guideEntry = _cachedLeftGuides[leftGuide];
+			if (guideEntry && guideEntry.setByUser) {
+				delta = _cachedLeftStartPoint - leftStartPoint;
+				if (_initialSettings.left.startPoint > 0 && ((_initialSettings.left.startPoint % 10) === 0)) {
+					delta = delta - _global.unitSize;
+				}
+				if (_cachedLeftStartPoint < 0 && leftStartPoint > 0) {
+					delta = delta - _global.unitSize;
+				}
+				if (_cachedLeftStartPoint > 0 && leftStartPoint < 0) {
+					delta = delta + _global.unitSize;
+				}
+				simulatedEvent = {};
+				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
+				new Guide(simulatedEvent, _global.rulerBarsConfig.left, this.leftRuler);
+			}
+		}
+		_initialSettings.left.startPoint = 0;
+
+		this.zoom(_cachedZoomVal);
 	};
 
 	/**
@@ -617,6 +700,12 @@
 
 		this.topRuler = getRuler(_global.rulerBarsConfig.top);
 		this.leftRuler = getRuler(_global.rulerBarsConfig.left);
+
+		if (!_initialSettings) {
+			_initialSettings = {};
+			_initialSettings.top = _global.rulerBarsConfig.top;
+			_initialSettings.left = _global.rulerBarsConfig.left;
+		}
 
 		this.rulerParent = _global.rulerBarsConfig.parent;
 
