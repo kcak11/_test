@@ -262,6 +262,7 @@
 		Util.applyCSSRule(guideDefinition, "guideDefinition_" + config.side);
 
 		ruler.appendChild((config.side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE);
+		ruler.style.zIndex = _global.rulerBarsConfig.zIndex;
 
 		ruler.addEventListener("mousedown", function(e) {
 			rulerMouseDown(e, config, ruler);
@@ -413,16 +414,25 @@
 		[].forEach.call(rulerElements, function(rulerElem) {
 			rulerElem.classList.remove("invisible");
 		});
+		_global.rulersHidden = false;
 	};
 
 	/**
-	 * Hide the rulers by adding css class "invisible"
+	 * Hide the rulers by adding css class "invisible".
 	 */
 	RulerBars.prototype.hideRulers = function() {
 		var rulerElements = document.querySelectorAll(".ruler, .rulerCornerBox");
 		[].forEach.call(rulerElements, function(rulerElem) {
 			rulerElem.classList.add("invisible");
 		});
+		_global.rulersHidden = true;
+	};
+
+	/**
+	 * Determine whether the RulerBars are visible.
+	 */
+	RulerBars.prototype.isVisible = function() {
+		return !(!!_global.rulersHidden);
 	};
 
 	/**
@@ -448,6 +458,18 @@
 		});
 		[].forEach.call(document.querySelectorAll(".rulerGuideLine"), function(guideLine) {
 			guideLine.classList.add("invisible");
+		});
+	};
+
+	/**
+	 * Clear all the guides functionality for rulers.
+	 */
+	RulerBars.prototype.clearGuides = function() {
+		_global.activeGuide = null;
+		_global.topGuides = {};
+		_global.leftGuides = {};
+		[].forEach.call(document.querySelectorAll(".rulerGuideLine"), function(guideLine) {
+			guideLine.parentNode.removeChild(guideLine);
 		});
 	};
 
@@ -520,6 +542,7 @@
 	 * @cfg.foregroundColor: The foreground color for the Rulers.
 	 * @cfg.tempGuideColor: The color for the temporary Guide.
 	 * @cfg.guideColor: The color for the Guide (which has been dropped on the ruler)
+	 * @cfg.zIndex: The zIndex value for the Rulers.
 	 */
 	RulerBars.prototype.createRulers = function(cfg) {
 		if (!cfg || !cfg.top || !cfg.left) {
@@ -536,6 +559,7 @@
 		this.TOP_RULER_SIZE = _global.rulerBarsConfig.top.size;
 		this.LEFT_RULER_SIZE = _global.rulerBarsConfig.left.size;
 
+		_global.rulerBarsConfig.zIndex = !isNaN(_global.rulerBarsConfig.zIndex) ? _global.rulerBarsConfig.zIndex : 0;
 		_global.rulerBarsConfig.top.side = "top";
 		_global.rulerBarsConfig.left.side = "left";
 

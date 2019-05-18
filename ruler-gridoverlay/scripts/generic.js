@@ -17,6 +17,17 @@ var gridOverlayObject = new GridOverlay(imageContainer, imgElem);
 gridOverlayObject.gridColor = "#000";
 var rulerBars = new RulerBars();
 
+var doExpandCollapse = function(btn) {
+	var panel = btn.parentNode;
+	if (panel.classList.contains("expanded")) {
+		panel.classList.remove("expanded");
+		panel.classList.add("collapsed");
+	} else {
+		panel.classList.add("expanded");
+		panel.classList.remove("collapsed");
+	}
+};
+
 var showOverlay = function() {
 	var scale = convertZoomPercentToScale(zoomPercentage);
 	gridOverlayObject.createGridOverlay(scale);
@@ -105,6 +116,23 @@ var disableGuides = function() {
 	document.querySelector(".disableGuides").classList.add("hide");
 	document.querySelector(".guideTip").classList.add("hide");
 };
+var clearGuides = function() {
+	rulerBars.clearGuides();
+};
+var toggleClearGuidesButton = function() {
+	var clearGuidesButton = document.querySelector(".clearGuides");
+	setInterval(function() {
+		if (!rulerBars.isVisible()) {
+			return;
+		}
+		var guideLines = document.querySelectorAll(".rulerGuideLine");
+		if (guideLines.length > 0) {
+			clearGuidesButton.disabled = false;
+		} else {
+			clearGuidesButton.disabled = true;
+		}
+	}, 200);
+};
 var createRulers = function() {
 	var topStartPoint = getComputedStyle(imgElem, null)["left"];
 	topStartPoint = !isNaN(parseInt(topStartPoint, 10)) ? parseInt(topStartPoint, 10) : 0;
@@ -120,10 +148,12 @@ var createRulers = function() {
 			size : 1400,
 			startPoint : -leftStartPoint,
 		},
-		element : imgElem
+		element : imgElem,
+		zIndex : 150
 	});
 };
 createRulers();
+toggleClearGuidesButton();
 
 /* Enable the Guides on Page Load */
 enableGuides();

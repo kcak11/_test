@@ -7,28 +7,32 @@
 <link href='//www.kcak11.com/favicon.ico' rel='icon' type='image/x-icon' />
 <meta content="https://cdn.kcak11.com/profile/the-k-circle.png" itemprop="image" />
 <meta content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0' name='viewport' />
-<link type="text/css" rel="stylesheet" href="assets/generic.css" />
-<link type="text/css" rel="stylesheet" href="assets/ruler.css" />
+<link type="text/css" rel="stylesheet" href="assets/css/generic.css" />
+<link type="text/css" rel="stylesheet" href="assets/css/ruler.css" />
 </head>
 <body>
 	<div id="container">
 		<div id="imageContainer">
-			<img src="picture.png" style="position: absolute; top: 50px; left: 50px;" title="Image Credit: https://www.google.com" />
+			<img src="assets/images/picture.png" style="position: absolute; top: 50px; left: 50px;" title="Image Credit: https://www.google.com" />
 		</div>
-		<div class="actionsContainer">
-			<button class="showBtn" onclick="showOverlay();">Show Grid Overlay</button>
-			<button class="hideBtn hide" onclick="hideOverlay();">Hide Grid Overlay</button>
-			<button class="showRulerBtn hide" onclick="showRuler();">Show Ruler</button>
-			<button class="hideRulerBtn" onclick="hideRuler();">Hide Ruler</button>
-			<button class="enableGuides guideBtn" onclick="enableGuides();">Enable Guides</button>
-			<button class="disableGuides guideBtn hide" onclick="disableGuides();">Disable Guides</button>
+	</div>
+	<div class="toolPanel">
+		<div class="actionsContainer expanded">
+			<button type="button" class="showBtn" onclick="showOverlay();">Show Grid Overlay</button>
+			<button type="button" class="hideBtn hide" onclick="hideOverlay();">Hide Grid Overlay</button>
+			<button type="button" class="showRulerBtn hide" onclick="showRuler();">Show Ruler</button>
+			<button type="button" class="hideRulerBtn" onclick="hideRuler();">Hide Ruler</button>
+			<button type="button" class="enableGuides guideBtn" onclick="enableGuides();">Enable Guides</button>
+			<button type="button" class="disableGuides guideBtn hide" onclick="disableGuides();">Disable Guides</button>
+			<button type="button" class="clearGuides guideBtn" onclick="clearGuides();">Clear All Guides</button>
 			<fieldset>
 				<legend>
 					&nbsp; Zoom: <span id="displayZoomValue">100</span> %&nbsp;
 				</legend>
-				<button onclick="doZoom('+');">+</button>
-				<button onclick="doZoom('-');">-</button>
+				<button type="button" onclick="doZoom('+');">+</button>
+				<button type="button" onclick="doZoom('-');">-</button>
 			</fieldset>
+			<div class="expandCollapseBar" onclick="doExpandCollapse(this);"></div>
 		</div>
 	</div>
 	<div class="guideTip hide">Guides have been enabled. Move your mouse over the rulers and click to set a Guide.</div>
