@@ -11,6 +11,7 @@
 	_global.RULER_THICKNESS = 30;
 	_global.topGuides = {};
 	_global.leftGuides = {};
+	_global.UNSET = "UNSET";
 
 	/**
 	 * Utility functions
@@ -55,6 +56,7 @@
 			_global.RULER_THICKNESS = 30;
 			_global.topGuides = {};
 			_global.leftGuides = {};
+			_global.UNSET = "UNSET";
 			_global.HORIZONTAL_TEMPORARY_GUIDE = document.createElement("div");
 			_global.HORIZONTAL_TEMPORARY_GUIDE.className = "tempGuideHorizontal tempGuide invisible";
 			_global.VERTICAL_TEMPORARY_GUIDE = document.createElement("div");
@@ -292,16 +294,15 @@
 		var tmpGuide = (config.side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE;
 		var offset = (rulerHovered) ? _global.RULER_THICKNESS : 0;
 		var guidePosition = Math.ceil(e[offsetProp] - offset) + ((_global.rulerBarsConfig[config.side].startPoint % 10) - _global.unitSize);
-		var rangeStart = _global.rulerBarsConfig[config.side]["startPoint"] || 0;
-		if (rangeStart > 0) {
-			rangeStart = 0;
-		} else {
-			rangeStart = Math.abs(rangeStart);
-		}
+
+		var ranges = getGuideRange(config.side);
+		var rangeStart = ranges[0];
+		var rangeEnd = ranges[1];
+
 		tmpGuide.classList.add("invisible");
 		if (_global.activeGuide) {
 			_global.activeGuide.guideLine.style[direction] = guidePosition + "px";
-			if (guidePosition < rangeStart) {
+			if (guidePosition < rangeStart || (rangeEnd !== _global.UNSET && guidePosition > rangeEnd)) {
 				_global.activeGuide.guideLine.classList.add("invisible");
 				ruler.classList.remove("guideEnabled");
 			} else {
@@ -342,16 +343,22 @@
 		if (!this.guides) {
 			return;
 		}
-		var rangeStart = _global.rulerBarsConfig[config.side]["startPoint"] || 0;
-		if (rangeStart > 0) {
-			rangeStart = 0;
-		} else {
-			rangeStart = Math.abs(rangeStart);
-		}
+
+		var ranges = getGuideRange(config.side);
+		var rangeStart = ranges[0];
+		var rangeEnd = ranges[1];
+
+		var startBoundary = (_global.RULER_THICKNESS + rangeStart);
+		var endBoundary = (_global.RULER_THICKNESS + rangeEnd);
+
 		if (_global.activeGuide) {
 			_global.activeGuide.destroy();
 			_global.activeGuide = null;
-			if ((config.side === "top" && Math.ceil(e.offsetX) < (_global.RULER_THICKNESS + rangeStart)) || (config.side === "left" && Math.ceil(e.offsetY) < (_global.RULER_THICKNESS + rangeStart))) {
+
+			if ((config.side === "top" && Math.ceil(e.offsetX) < startBoundary) || (config.side === "left" && Math.ceil(e.offsetY) < startBoundary)) {
+				return;
+			}
+			if (rangeEnd !== _global.UNSET && ((config.side === "top" && Math.ceil(e.offsetX) > endBoundary) || (config.side === "left" && Math.ceil(e.offsetY) > endBoundary))) {
 				return;
 			}
 			new Guide(e, config, ruler);
@@ -378,13 +385,17 @@
 		if (!this.guides) {
 			return;
 		}
-		var rangeStart = _global.rulerBarsConfig[config.side]["startPoint"] || 0;
-		if (rangeStart > 0) {
-			rangeStart = 0;
-		} else {
-			rangeStart = Math.abs(rangeStart);
+
+		var ranges = getGuideRange(config.side);
+		var rangeStart = ranges[0];
+		var rangeEnd = ranges[1];
+
+		var startBoundary = (_global.RULER_THICKNESS + _global.unitSize + rangeStart);
+		var endBoundary = (_global.RULER_THICKNESS + _global.unitSize + rangeEnd);
+		if ((config.side === "top" && Math.ceil(e.offsetX) < startBoundary) || (config.side === "left" && Math.ceil(e.offsetY) < startBoundary)) {
+			return;
 		}
-		if ((config.side === "top" && Math.ceil(e.offsetX) < (_global.RULER_THICKNESS + _global.unitSize + rangeStart)) || (config.side === "left" && Math.ceil(e.offsetY) < (_global.RULER_THICKNESS + _global.unitSize + rangeStart))) {
+		if (rangeEnd !== _global.UNSET && ((config.side === "top" && Math.ceil(e.offsetX) > endBoundary) || (config.side === "left" && Math.ceil(e.offsetY) > endBoundary))) {
 			return;
 		}
 		new Guide(e, config, ruler);
@@ -473,6 +484,27 @@
 		});
 	};
 
+	var getGuideRange = function(side) {
+		var startPoint = _global.rulerBarsConfig[side]["startPoint"];
+		var rangeStart = startPoint || 0;
+		if (rangeStart > 0) {
+			rangeStart = 0;
+		} else {
+			rangeStart = Math.abs(rangeStart);
+		}
+		var rangeEnd = _global.UNSET;
+		if (side === "top" && _global.elementWidth) {
+			rangeEnd = rangeStart + _global.elementWidth;
+		}
+		if (side === "left" && _global.elementHeight) {
+			rangeEnd = rangeStart + _global.elementHeight;
+		}
+		if (rangeEnd !== _global.UNSET && startPoint > 0) {
+			rangeEnd = rangeEnd - startPoint;
+		}
+		return [ rangeStart, rangeEnd ];
+	};
+
 	var showTemporaryGuide = function(evt, side) {
 		if (!this.guides) {
 			return;
@@ -481,21 +513,22 @@
 		var currentRuler = (side === "top") ? this.topRuler : this.leftRuler;
 		var direction = (side === "top") ? "left" : "top";
 		var offsetProp = (side === "top") ? "offsetX" : "offsetY";
-		var rangeStart = _global.rulerBarsConfig[side]["startPoint"] || 0;
-		if (rangeStart > 0) {
-			rangeStart = 0;
-		} else {
-			rangeStart = Math.abs(rangeStart);
-		}
+
+		var ranges = getGuideRange(side);
+		var rangeStart = ranges[0];
+		var rangeEnd = ranges[1];
+
 		var other = (side === "top") ? "left" : "top";
 		tmpGuide.classList.remove("invisible");
 
 		var adjustedPosition = (_global.rulerBarsConfig[side].startPoint % 10) - _global.unitSize;
-
 		tmpGuide.style[direction] = Math.ceil(evt[offsetProp] - _global.RULER_THICKNESS + adjustedPosition) + "px";
-		if ((Math.ceil(evt[offsetProp] - _global.RULER_THICKNESS) - _global.unitSize) < rangeStart) {
+
+		var currentPosition = (Math.ceil(evt[offsetProp] - _global.RULER_THICKNESS) - _global.unitSize);
+		if (currentPosition < rangeStart || (rangeEnd !== _global.UNSET && currentPosition > rangeEnd)) {
 			tmpGuide.classList.add("invisible");
 		}
+
 		if (Math.ceil(evt[offsetProp]) < _global.RULER_THICKNESS) {
 			currentRuler.classList.remove("guideEnabled");
 		} else {
@@ -531,6 +564,20 @@
 	};
 
 	/**
+	 * Get the RulerBars current configuration.
+	 */
+	RulerBars.prototype.getConfig = function() {
+		try {
+			var obj = JSON.parse(JSON.stringify(_global.rulerBarsConfig));
+			obj.parent = _global.rulerBarsConfig.parent;
+			obj.element = _global.rulerBarsConfig.element;
+			return obj;
+		} catch (exjs) {
+			return _global.rulerBarsConfig;
+		}
+	};
+
+	/**
 	 * Create the top & left rulers by supplying a configuration object.
 	 * 
 	 * @cfg: configuration for creating the rulers.
@@ -548,13 +595,18 @@
 		if (!cfg || !cfg.top || !cfg.left) {
 			return;
 		}
-		Util.resetGlobal();
+		/* Destroy existing Rulers */
+		this.destroy();
 		if (cfg.element && typeof cfg.element.offsetWidth === "number" && typeof cfg.element.offsetHeight === "number") {
-			_global.rulerMaxRight = cfg.element.offsetWidth;
-			_global.rulerMaxBottom = cfg.element.offsetHeight;
+			_global.elementWidth = cfg.element.offsetWidth;
+			_global.elementHeight = cfg.element.offsetHeight;
+		} else {
+			_global.elementWidth = 0;
+			_global.elementHeight = 0;
 		}
 		_global.rulerBarsConfig = Util.createConfig(cfg);
-		_global.rulerBarsConfig.parent = _global.rulerBarsConfig.parent || document.querySelector("body");
+		_global.rulerBarsConfig.parent = cfg.parent || document.querySelector("body");
+		_global.rulerBarsConfig.element = cfg.element;
 
 		this.TOP_RULER_SIZE = _global.rulerBarsConfig.top.size;
 		this.LEFT_RULER_SIZE = _global.rulerBarsConfig.left.size;

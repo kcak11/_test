@@ -30,7 +30,8 @@ body {
 	top: 450px;
 	left: 30px;
 	width: 800px;
-	height: 400px; overflow : hidden;
+	height: 400px;
+	overflow: hidden;
 	z-index: 200;
 	overflow: hidden;
 }
@@ -123,7 +124,7 @@ fieldset button {
 	position: absolute;
 	top: 0;
 	left: 50%;
-	z-index: 50;
+	z-index: 175;
 	font-size: 16px;
 	padding: 10px;
 	border-bottom-left-radius: 10px;

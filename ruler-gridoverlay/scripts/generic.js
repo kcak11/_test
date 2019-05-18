@@ -142,16 +142,21 @@ var createRulers = function() {
 	rulerBars.createRulers({
 		top : {
 			size : 2000,
-			startPoint : -topStartPoint,
+			startPoint : -topStartPoint
 		},
 		left : {
 			size : 1400,
-			startPoint : -leftStartPoint,
+			startPoint : -leftStartPoint
 		},
 		element : imgElem,
 		zIndex : 150
 	});
 };
+
+/**
+ * Run on Page Load
+ */
+
 createRulers();
 toggleClearGuidesButton();
 
