@@ -192,7 +192,5 @@ toggleClearGuidesButton();
 /* Enable the Guides on Page Load */
 enableGuides();
 
-/* Setting Page Load Zoom to 80% Hence invoking doZoom("-") 2 times */
+/* Setting Page Load Zoom to 90% Hence invoking doZoom("-") 2 times */
 doZoom("-");
-doZoom("-");
-
