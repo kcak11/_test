@@ -88,6 +88,7 @@ var showRuler = function() {
 	[].forEach.call(document.querySelectorAll(".guideBtn"), function(guideBtn) {
 		guideBtn.classList.remove("visibleNone");
 	});
+	document.querySelector(".toolPanel").style.left = "30px";
 };
 var hideRuler = function() {
 	rulerBars.hideRulers();
@@ -96,6 +97,7 @@ var hideRuler = function() {
 	[].forEach.call(document.querySelectorAll(".guideBtn"), function(guideBtn) {
 		guideBtn.classList.add("visibleNone");
 	});
+	document.querySelector(".toolPanel").style.left = "0px";
 };
 var showGuideTip = function() {
 	clearTimeout(window.showGuideTipTimer);

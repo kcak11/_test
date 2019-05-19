@@ -14,9 +14,6 @@
 	_global.leftGuides = {};
 	_global.UNSET = "UNSET";
 
-	/* _initialSettings: storing the initial data for comparison when calling updateRulers. */
-	var _initialSettings = undefined;
-
 	/**
 	 * Utility functions
 	 */
@@ -237,6 +234,10 @@
 		small.className = "small";
 		var units = [ big, medium, small ];
 		var iterations = Math.ceil(config.size / _global.unitSize);
+		var unitAdjustment = 0;
+		if (config.startPoint > 0 && ((config.startPoint % 10) !== 0)) {
+			unitAdjustment = 10;
+		}
 		for (var i = Math.ceil(config.startPoint / _global.unitSize), ctr = 0; i <= iterations; i++) {
 			var unit;
 			if (Math.abs(i) % _global.unitSize === 0) {
@@ -247,7 +248,7 @@
 			} else if (Math.abs(i) % 2 === 0) {
 				unit = medium.cloneNode(true);
 			}
-			unit.style[config.side === "top" ? "left" : "top"] = (ctr * _global.unitSize) + "px";
+			unit.style[config.side === "top" ? "left" : "top"] = ((ctr * _global.unitSize) + unitAdjustment) + "px";
 			if (ctr === 0 && startPointDelta !== 0) {
 				unit.style.visibility = "hidden";
 			}
@@ -603,13 +604,12 @@
 		if (!this.rulerBarsEnabled) {
 			throw new Error("RulerBars does not exist, use createRulers instead of updateRulers");
 		}
-		var initialTopStartPoint = _initialSettings.top.startPoint || 0;
-		var initialLeftStartPoint = _initialSettings.left.startPoint || 0;
 		var _cachedTopGuides = _global.topGuides;
 		var _cachedLeftGuides = _global.leftGuides;
 		var _cachedZoomVal = _global.zoomVal || 1;
 		var _cachedTopStartPoint = _global.rulerBarsConfig.top.startPoint || 0;
 		var _cachedLeftStartPoint = _global.rulerBarsConfig.left.startPoint || 0;
+		var isVisible = this.isVisible();
 
 		this.createRulers(cfg);
 
@@ -621,43 +621,25 @@
 			if (guideEntry && guideEntry.setByUser) {
 
 				delta = _cachedTopStartPoint - topStartPoint;
-				if (_initialSettings.top.startPoint > 0 && ((_initialSettings.top.startPoint % 10) === 0)) {
-					delta = delta - _global.unitSize;
-				}
-				if (_cachedTopStartPoint < 0 && topStartPoint > 0) {
-					delta = delta - _global.unitSize;
-				}
-				if (_cachedTopStartPoint > 0 && topStartPoint < 0) {
-					delta = delta + _global.unitSize;
-				}
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
 				new Guide(simulatedEvent, _global.rulerBarsConfig.top, this.topRuler);
 			}
 		}
-		_initialSettings.top.startPoint = 0;
-
 		for (leftGuide in _cachedLeftGuides) {
 			var guideEntry = _cachedLeftGuides[leftGuide];
 			if (guideEntry && guideEntry.setByUser) {
 				delta = _cachedLeftStartPoint - leftStartPoint;
-				if (_initialSettings.left.startPoint > 0 && ((_initialSettings.left.startPoint % 10) === 0)) {
-					delta = delta - _global.unitSize;
-				}
-				if (_cachedLeftStartPoint < 0 && leftStartPoint > 0) {
-					delta = delta - _global.unitSize;
-				}
-				if (_cachedLeftStartPoint > 0 && leftStartPoint < 0) {
-					delta = delta + _global.unitSize;
-				}
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
 				new Guide(simulatedEvent, _global.rulerBarsConfig.left, this.leftRuler);
 			}
 		}
-		_initialSettings.left.startPoint = 0;
 
 		this.zoom(_cachedZoomVal);
+		if (!isVisible) {
+			this.hideRulers();
+		}
 	};
 
 	/**
@@ -700,12 +682,6 @@
 
 		this.topRuler = getRuler(_global.rulerBarsConfig.top);
 		this.leftRuler = getRuler(_global.rulerBarsConfig.left);
-
-		if (!_initialSettings) {
-			_initialSettings = {};
-			_initialSettings.top = _global.rulerBarsConfig.top;
-			_initialSettings.left = _global.rulerBarsConfig.left;
-		}
 
 		this.rulerParent = _global.rulerBarsConfig.parent;
 
