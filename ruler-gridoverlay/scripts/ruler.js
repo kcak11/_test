@@ -632,7 +632,7 @@
 
 		this.createRulers(cfg);
 
-		var topGuide, leftGuide, delta, simulatedEvent;
+		var topGuide, leftGuide, delta, simulatedEvent, _newGuide;
 		var topStartPoint = cfg.top.startPoint || 0;
 		var leftStartPoint = cfg.left.startPoint || 0;
 		for (topGuide in _cachedTopGuides) {
@@ -642,7 +642,10 @@
 				delta = _cachedTopStartPoint - topStartPoint;
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
-				new Guide(simulatedEvent, _global.rulerBarsConfig.top, this.topRuler);
+				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.top, this.topRuler);
+				if (simulatedEvent[guideEntry.guide.offsetProp] < topStartPoint) {
+					_newGuide.guideLine.classList.add("invisible");
+				}
 			}
 		}
 		for (leftGuide in _cachedLeftGuides) {
@@ -651,7 +654,10 @@
 				delta = _cachedLeftStartPoint - leftStartPoint;
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
-				new Guide(simulatedEvent, _global.rulerBarsConfig.left, this.leftRuler);
+				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.left, this.leftRuler);
+				if (simulatedEvent[guideEntry.guide.offsetProp] < leftStartPoint) {
+					_newGuide.guideLine.classList.add("invisible");
+				}
 			}
 		}
 
