@@ -185,6 +185,33 @@ var pan = function(left, top) {
 	});
 };
 
+var panningTest = function() {
+	document.querySelector(".expandCollapseBar").click();
+	var startPointSets = [];
+	for (var i = 96; i < 400; i += 53) {
+		startPointSets.push([ i, i + 47 ]);
+	}
+	for (var i = 453; i > -196; i -= 53) {
+		startPointSets.push([ i, i + 47 ]);
+	}
+	for (var i = -156; i < 200; i += 40) {
+		startPointSets.push([ i, i ]);
+	}
+	startPointSets.push([ 50, 50 ]);
+
+	for (var i = 0; i < startPointSets.length; i++) {
+		(function(idx, len) {
+			setTimeout(function() {
+				pan(startPointSets[idx][0], startPointSets[idx][1]);
+				if (idx === len - 1) {
+					var btn = document.querySelector(".collapsed .expandCollapseBar");
+					btn && btn.click();
+				}
+			}, (300 * i));
+		}(i, startPointSets.length));
+	}
+};
+
 /* Create Rulers on Page Load */
 createRulers();
 

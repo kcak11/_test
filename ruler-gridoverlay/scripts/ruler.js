@@ -68,11 +68,11 @@
 	/**
 	 * Guide constructor
 	 * 
-	 * @evt: The event object
+	 * @e: The event object
 	 * @config: The ruler config object
 	 * @ruler: The ruler DOM element
 	 */
-	var Guide = function(evt, config, ruler) {
+	var Guide = function(e, config, ruler) {
 		if (!(this instanceof Guide)) {
 			throw new Error("Guide is a constructor, use the \"new\" operator to create new instance.");
 		}
@@ -80,8 +80,8 @@
 		var startPoint = _global.rulerBarsConfig[config.side].startPoint;
 		this.side = config.side;
 		this.offsetProp = (this.side === "top") ? "offsetX" : "offsetY";
-		this[this.offsetProp] = Math.ceil(evt[this.offsetProp]);
-		this.positionVal = Math.ceil(evt[this.offsetProp] - _global.RULER_THICKNESS) + ((_global.rulerBarsConfig[this.side].startPoint % _global.unitSize) - _global.unitSize);
+		this[this.offsetProp] = Math.ceil(e[this.offsetProp]);
+		this.positionVal = Math.ceil(e[this.offsetProp] - _global.RULER_THICKNESS) + ((_global.rulerBarsConfig[this.side].startPoint % _global.unitSize) - _global.unitSize);
 		this.guidePosition = this.positionVal + "px";
 		var entry = this.positionVal + startPoint + _global.unitSize;
 		if (_global[this.side + "Guides"][entry + "px"] || entry < (_global.unitSize + (startPoint % _global.unitSize))) {
@@ -311,15 +311,25 @@
 		var tmpGuide = (config.side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE;
 		var offset = (rulerHovered) ? _global.RULER_THICKNESS : 0;
 		var guidePosition = Math.ceil(e[offsetProp] - offset) + ((_global.rulerBarsConfig[config.side].startPoint % _global.unitSize) - _global.unitSize);
+		var startPoint = _global.rulerBarsConfig[config.side]["startPoint"];
 
 		var ranges = getGuideRange(config.side);
 		var rangeStart = ranges[0];
 		var rangeEnd = ranges[1];
 
+		var startDelta = 0;
+		if (startPoint > 0 && startPoint % 10 !== 0) {
+			startDelta = startPoint % 10;
+		}
+		var endDelta = (rangeStart % _global.unitSize);
+		if (startPoint > 0 && startPoint % 10 !== 0) {
+			endDelta = endDelta - (startPoint % 10);
+		}
+
 		tmpGuide.classList.add("invisible");
 		if (_global.activeGuide) {
 			_global.activeGuide.guideLine.style[direction] = guidePosition + "px";
-			if (guidePosition < rangeStart || (rangeEnd !== _global.UNSET && guidePosition > (rangeEnd - (rangeStart % _global.unitSize)))) {
+			if (guidePosition < (rangeStart + startDelta) || (rangeEnd !== _global.UNSET && guidePosition > (rangeEnd - endDelta))) {
 				_global.activeGuide.guideLine.classList.add("invisible");
 				ruler.classList.remove("guideEnabled");
 			} else {
@@ -360,7 +370,7 @@
 		if (!this.guides) {
 			return;
 		}
-
+		var offsetProp = (config.side === "top") ? "offsetX" : "offsetY";
 		var ranges = getGuideRange(config.side);
 		var rangeStart = ranges[0];
 		var rangeEnd = ranges[1];
@@ -376,6 +386,10 @@
 				return;
 			}
 			if (rangeEnd !== _global.UNSET && ((config.side === "top" && Math.ceil(e.offsetX) > endBoundary) || (config.side === "left" && Math.ceil(e.offsetY) > endBoundary))) {
+				return;
+			}
+			var currentPosition = (Math.ceil(e[offsetProp] - _global.RULER_THICKNESS) - _global.unitSize);
+			if (currentPosition < rangeStart || (rangeEnd !== _global.UNSET && currentPosition > rangeEnd)) {
 				return;
 			}
 			new Guide(e, config, ruler);
@@ -402,7 +416,7 @@
 		if (!this.guides) {
 			return;
 		}
-
+		var offsetProp = (config.side === "top") ? "offsetX" : "offsetY";
 		var ranges = getGuideRange(config.side);
 		var rangeStart = ranges[0];
 		var rangeEnd = ranges[1];
@@ -415,6 +429,11 @@
 		if (rangeEnd !== _global.UNSET && ((config.side === "top" && Math.ceil(e.offsetX) > endBoundary) || (config.side === "left" && Math.ceil(e.offsetY) > endBoundary))) {
 			return;
 		}
+		var currentPosition = (Math.ceil(e[offsetProp] - _global.RULER_THICKNESS) - _global.unitSize);
+		if (currentPosition < rangeStart || (rangeEnd !== _global.UNSET && currentPosition > rangeEnd)) {
+			return;
+		}
+
 		new Guide(e, config, ruler);
 	};
 
@@ -522,7 +541,7 @@
 		return [ rangeStart, rangeEnd ];
 	};
 
-	var showTemporaryGuide = function(evt, side) {
+	var showTemporaryGuide = function(e, side) {
 		if (!this.guides) {
 			return;
 		}
@@ -539,14 +558,14 @@
 		tmpGuide.classList.remove("invisible");
 
 		var adjustedPosition = (_global.rulerBarsConfig[side].startPoint % _global.unitSize) - _global.unitSize;
-		tmpGuide.style[direction] = Math.ceil(evt[offsetProp] - _global.RULER_THICKNESS + adjustedPosition) + "px";
+		tmpGuide.style[direction] = Math.ceil(e[offsetProp] - _global.RULER_THICKNESS + adjustedPosition) + "px";
 
-		var currentPosition = (Math.ceil(evt[offsetProp] - _global.RULER_THICKNESS) - _global.unitSize);
+		var currentPosition = (Math.ceil(e[offsetProp] - _global.RULER_THICKNESS) - _global.unitSize);
 		if (currentPosition < rangeStart || (rangeEnd !== _global.UNSET && currentPosition > rangeEnd)) {
 			tmpGuide.classList.add("invisible");
 		}
 
-		if (Math.ceil(evt[offsetProp]) < _global.RULER_THICKNESS) {
+		if (currentPosition < rangeStart || (rangeEnd !== _global.UNSET && currentPosition > rangeEnd)) {
 			currentRuler.classList.remove("guideEnabled");
 		} else {
 			currentRuler.classList.add("guideEnabled");
