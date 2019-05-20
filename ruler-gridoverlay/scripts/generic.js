@@ -187,15 +187,16 @@ var pan = function(left, top) {
 
 var panningTest = function() {
 	document.querySelector(".expandCollapseBar").click();
+	var random = parseInt((Math.random() * 10), 10);
 	var startPointSets = [];
 	for (var i = 96; i < 400; i += 53) {
-		startPointSets.push([ i, i + 47 ]);
+		startPointSets.push([ i + random, i + 47 + random ]);
 	}
 	for (var i = 453; i > -196; i -= 53) {
-		startPointSets.push([ i, i + 47 ]);
+		startPointSets.push([ i + random, i + 47 + random ]);
 	}
-	for (var i = -156; i < 200; i += 40) {
-		startPointSets.push([ i, i ]);
+	for (var i = -156; i < 200; i += 20) {
+		startPointSets.push([ i + random, i + random ]);
 	}
 	startPointSets.push([ 50, 50 ]);
 

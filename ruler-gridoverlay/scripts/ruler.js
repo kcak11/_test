@@ -448,7 +448,7 @@
 		[].forEach.call(rulerElements, function(rulerElem) {
 			rulerElem.parentNode.removeChild(rulerElem);
 		});
-		this.rulerBarsEnabled = false;
+		this.rulerBarsCreated = false;
 		_global.rulerBarsConfig = null;
 		Util.resetGlobal();
 	};
@@ -573,7 +573,7 @@
 	};
 
 	RulerBars.prototype.zoom = function(scale) {
-		if (!this.rulerBarsEnabled || !this.topRuler || !this.leftRuler) {
+		if (!this.rulerBarsCreated || !this.topRuler || !this.leftRuler) {
 			return;
 		}
 		if (isNaN(scale)) {
@@ -620,8 +620,8 @@
 	 * @cfg: configuration for updating the rulers - same as the cfg for createRulers
 	 */
 	RulerBars.prototype.updateRulers = function(cfg) {
-		if (!this.rulerBarsEnabled) {
-			throw new Error("RulerBars does not exist, use createRulers instead of updateRulers");
+		if (!this.rulerBarsCreated) {
+			throw new Error("RulerBars does not exist, use createRulers instead of updateRulers.");
 		}
 		var _cachedTopGuides = _global.topGuides;
 		var _cachedLeftGuides = _global.leftGuides;
@@ -629,7 +629,7 @@
 		var _cachedTopStartPoint = _global.rulerBarsConfig.top.startPoint || 0;
 		var _cachedLeftStartPoint = _global.rulerBarsConfig.left.startPoint || 0;
 		var isVisible = this.isVisible();
-
+		this.rulerBarsCreated = false;
 		this.createRulers(cfg);
 
 		var topGuide, leftGuide, delta, simulatedEvent, _newGuide;
@@ -685,6 +685,9 @@
 		if (!cfg || !cfg.top || !cfg.left) {
 			return;
 		}
+		if (this.rulerBarsCreated) {
+			throw new Error("RulerBars already created. use updateRulers instead of createRulers.");
+		}
 		/* Destroy existing Rulers */
 		this.destroy();
 		if (cfg.element && typeof cfg.element.offsetWidth === "number" && typeof cfg.element.offsetHeight === "number") {
@@ -721,7 +724,7 @@
 		_global.rulerBarsConfig.parent.appendChild(this.topRuler);
 		_global.rulerBarsConfig.parent.appendChild(this.leftRuler);
 
-		this.rulerBarsEnabled = true;
+		this.rulerBarsCreated = true;
 	};
 
 })(window);
