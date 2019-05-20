@@ -643,7 +643,7 @@
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
 				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.top, this.topRuler);
-				if (simulatedEvent[guideEntry.guide.offsetProp] < topStartPoint) {
+				if (simulatedEvent[guideEntry.guide.offsetProp] < topStartPoint || (simulatedEvent[guideEntry.guide.offsetProp] - topStartPoint - (topStartPoint % 10)) <= _global.RULER_THICKNESS) {
 					_newGuide.guideLine.classList.add("invisible");
 				}
 			}
@@ -655,7 +655,8 @@
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
 				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.left, this.leftRuler);
-				if (simulatedEvent[guideEntry.guide.offsetProp] < leftStartPoint) {
+				console.log(simulatedEvent[guideEntry.guide.offsetProp]);
+				if (simulatedEvent[guideEntry.guide.offsetProp] < leftStartPoint || (simulatedEvent[guideEntry.guide.offsetProp] - leftStartPoint - (leftStartPoint % 10)) <= _global.RULER_THICKNESS) {
 					_newGuide.guideLine.classList.add("invisible");
 				}
 			}
