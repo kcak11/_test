@@ -573,11 +573,12 @@
 	};
 
 	RulerBars.prototype.zoom = function(scale) {
+		if (!scale || isNaN(scale)) {
+			scale = 1;
+		}
+		_global.zoomVal = scale;
 		if (!this.rulerBarsCreated || !this.topRuler || !this.leftRuler) {
 			return;
-		}
-		if (isNaN(scale)) {
-			scale = 1;
 		}
 		/* default thickness scale = 2 */
 		var guideLineThicknessScale = (2 / scale);
@@ -597,7 +598,6 @@
 		this.topRuler.style.transform = "scaleX(" + scale + ")";
 		this.leftRuler.style.transformOrigin = "0 0";
 		this.leftRuler.style.transform = "scaleY(" + scale + ")";
-		_global.zoomVal = scale || 1;
 	};
 
 	/**
@@ -622,6 +622,9 @@
 	RulerBars.prototype.updateRulers = function(cfg) {
 		if (!this.rulerBarsCreated) {
 			throw new Error("RulerBars does not exist, use createRulers instead of updateRulers.");
+		}
+		if (!cfg || !cfg.top || !cfg.left) {
+			throw new Error("\nMissing Configuration !!\n{\n\ttop: {...},\n\tleft: {...}\n}\n");
 		}
 		var _cachedTopGuides = _global.topGuides;
 		var _cachedLeftGuides = _global.leftGuides;
@@ -683,12 +686,13 @@
 	 * @cfg.zIndex: The zIndex value for the Rulers.
 	 */
 	RulerBars.prototype.createRulers = function(cfg) {
-		if (!cfg || !cfg.top || !cfg.left) {
-			return;
-		}
 		if (this.rulerBarsCreated) {
 			throw new Error("RulerBars already created. use updateRulers instead of createRulers.");
 		}
+		if (!cfg || !cfg.top || !cfg.left) {
+			throw new Error("\nMissing Configuration !!\n{\n\ttop: {...},\n\tleft: {...}\n}\n");
+		}
+		var _cachedZoomVal = _global.zoomVal || 1;
 		/* Destroy existing Rulers */
 		this.destroy();
 		if (cfg.element && typeof cfg.element.offsetWidth === "number" && typeof cfg.element.offsetHeight === "number") {
@@ -726,6 +730,7 @@
 		_global.rulerBarsConfig.parent.appendChild(this.leftRuler);
 
 		this.rulerBarsCreated = true;
+		this.zoom(_cachedZoomVal);
 	};
 
 })(window);

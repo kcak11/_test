@@ -3,6 +3,19 @@
   Author: K.C.Ashish Kumar
   https://kcak11.com (or) https://ashishkumarkc.com
 */
+
+/** WARNING **/
+/**
+	Modifying this file can lead to ** unintended consequences **.
+	
+	Most of the styling for the rulers can be controlled via
+	the configuration supplied to the createRulers / updateRulers
+	in the ruler.js file.
+	
+	Please refer to the documentation there for insights as to how
+	the various styles can be defined / controlled.
+*/
+
 .ruler {
 	position: absolute;
 	top: 30px;
