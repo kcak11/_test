@@ -658,7 +658,6 @@
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
 				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.left, this.leftRuler);
-				console.log(simulatedEvent[guideEntry.guide.offsetProp]);
 				if (simulatedEvent[guideEntry.guide.offsetProp] < leftStartPoint || (simulatedEvent[guideEntry.guide.offsetProp] - leftStartPoint - (leftStartPoint % 10)) <= _global.RULER_THICKNESS) {
 					_newGuide.guideLine.classList.add("invisible");
 				}
