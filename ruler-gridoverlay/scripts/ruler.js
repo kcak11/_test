@@ -4,6 +4,7 @@
  * Author: K.C.Ashish Kumar https://kcak11.com (or) https://ashishkumarkc.com
  * 
  * Repository: https://github.com/kcak11/pens
+ * LICENSE: MIT - https://mit-license.kcak11.com
  */
 
 (function(w) {
@@ -211,7 +212,7 @@
 		config.size = parseInt(config.size, 10) || 100;
 		_global.rulerBarsConfig.tempGuideColor = _global.rulerBarsConfig.tempGuideColor || "#ffaaab";
 		_global.rulerBarsConfig.guideColor = _global.rulerBarsConfig.guideColor || "#ff0400";
-		if (isNaN(config.size) || config.size < 0) {
+		if (!config.size || isNaN(config.size) || config.size < 0) {
 			throw new Error("Invalid size parameter specified " + config.size + ". Expected positive number.");
 		}
 		config.startPoint = parseInt(config.startPoint, 10) || 0;
