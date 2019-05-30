@@ -14,7 +14,8 @@ var zoomSteps = 10;
 var imageContainer = document.querySelector("#imageContainer");
 var imgElem = document.querySelector("#imageContainer img");
 var gridOverlayObject = new GridOverlay(imageContainer, imgElem);
-gridOverlayObject.gridColor = "#000";
+gridOverlayObject.setZIndex(50);
+gridOverlayObject.setColor("#000");
 var rulerBars = new RulerBars();
 
 var doExpandCollapse = function(btn) {

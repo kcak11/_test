@@ -22,17 +22,38 @@
 		if (!container || !element) {
 			throw new Error("Required parameters: container, element");
 		}
-		
+
 		var gridZIndex = 0;
-		
+		var gridColor = "#000";
+		var gridActive = false;
+
 		/**
-		 * Set the z-index for the Gridoverlay. 
+		 * Set the z-index for the Gridoverlay.
 		 */
 		this.setZIndex = function(zIndex) {
-			if(!zIndex || isNaN(zIndex)){
+			if (!zIndex || isNaN(zIndex)) {
 				zIndex = 0;
 			}
 			gridZIndex = zIndex;
+			this.zoom(this.gridScale);
+		};
+
+		/**
+		 * Set the color of the Gridoverlay.
+		 */
+		this.setColor = function(color) {
+			if (!color) {
+				color = "#000";
+			}
+			gridColor = color;
+			this.zoom(this.gridScale);
+		}
+
+		/**
+		 * Check whether the Gridoverlay is displayed or not.
+		 */
+		this.isGridActive = function() {
+			return !!gridActive;
 		};
 
 		/**
@@ -42,7 +63,6 @@
 			if (!this.gridScale || isNaN(this.gridScale)) {
 				this.gridScale = 1;
 			}
-			this.gridColor = this.gridColor || "#000";
 			var _gbc = document.querySelector("#gridBarContainer");
 			_gbc && _gbc.parentNode.removeChild(_gbc);
 
@@ -75,7 +95,7 @@
 			for (var w = 0; w < width; w += gridSize) {
 				var vBar = document.createElement("div");
 				vBar.className = "vGridBar";
-				vBar.style.borderRight = "1px dotted " + this.gridColor;
+				vBar.style.borderRight = "1px dotted " + gridColor;
 				vBar.style.position = "absolute";
 				vBar.style.left = w + "px";
 				vBar.style.top = 0;
@@ -92,7 +112,7 @@
 			for (var h = 0; h < height; h += gridSize) {
 				var hBar = document.createElement("div");
 				hBar.className = "hGridBar";
-				hBar.style.borderBottom = "1px dotted " + this.gridColor;
+				hBar.style.borderBottom = "1px dotted " + gridColor;
 				hBar.style.position = "absolute";
 				hBar.style.top = h + "px";
 				hBar.style.left = 0;
@@ -112,14 +132,14 @@
 				gridBarContainer.style.transform = "scale(" + this.gridScale + ")";
 			}
 			container.appendChild(gridBarContainer);
-			this.gridActive = true;
+			gridActive = true;
 		};
 
 		/**
 		 * Zoom the Grid to the specified scale.
 		 */
 		this.zoom = function(scale) {
-			if (!this.gridActive) {
+			if (!this.isGridActive()) {
 				return;
 			}
 			this.gridScale = scale || 1;
@@ -132,7 +152,7 @@
 		this.removeGridOverlay = function() {
 			var gridBarContainer = document.querySelector("#gridBarContainer");
 			gridBarContainer && gridBarContainer.parentNode.removeChild(gridBarContainer);
-			this.gridActive = false;
+			gridActive = false;
 		};
 
 		var checkContentLoaded = function() {

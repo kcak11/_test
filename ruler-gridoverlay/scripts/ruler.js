@@ -273,11 +273,11 @@
 
 		var guideDefinition;
 		if (config.side === "left") {
-			guideDefinition = ".tempGuideHorizontal{border:none;transform:scaleY(2.0);border-top:1px solid " + _global.rulerBarsConfig.tempGuideColor + ";pointer-events:none;position:absolute;left:-" + _global.RULER_THICKNESS + "px;top:0;width:" + (this.TOP_RULER_SIZE + _global.RULER_THICKNESS - _global.rulerBarsConfig.top.startPoint) + "px;}";
-			guideDefinition += "\n.horizontalGuideLine{border:none;transform:scaleY(2.0);border-top:1px solid " + _global.rulerBarsConfig.guideColor + ";pointer-events:none;position:absolute;left:-" + _global.RULER_THICKNESS + "px;top:0;width:" + (this.TOP_RULER_SIZE + _global.RULER_THICKNESS - _global.rulerBarsConfig.top.startPoint) + "px;}";
+			guideDefinition = ".tempGuideHorizontal{border:none;transform:scaleY(2.0);border-top:1px solid " + _global.rulerBarsConfig.tempGuideColor + ";pointer-events:none;position:absolute;left:-" + _global.RULER_THICKNESS + "px;top:0;width:" + (_global.rulerBarsConfig.top.size + _global.RULER_THICKNESS - _global.rulerBarsConfig.top.startPoint) + "px;}";
+			guideDefinition += "\n.horizontalGuideLine{border:none;transform:scaleY(2.0);border-top:1px solid " + _global.rulerBarsConfig.guideColor + ";pointer-events:none;position:absolute;left:-" + _global.RULER_THICKNESS + "px;top:0;width:" + (_global.rulerBarsConfig.top.size + _global.RULER_THICKNESS - _global.rulerBarsConfig.top.startPoint) + "px;}";
 		} else {
-			guideDefinition = ".tempGuideVertical{border:none;transform:scaleX(2.0);border-left:1px solid " + _global.rulerBarsConfig.tempGuideColor + ";pointer-events:none;position:absolute;left:0;top:-" + _global.RULER_THICKNESS + "px;height:" + (this.LEFT_RULER_SIZE + _global.RULER_THICKNESS - _global.rulerBarsConfig.left.startPoint) + "px;}";
-			guideDefinition += "\n.verticalGuideLine{border:none;transform:scaleX(2.0);border-left:1px solid " + _global.rulerBarsConfig.guideColor + ";pointer-events:none;position:absolute;left:0;top:-" + _global.RULER_THICKNESS + "px;height:" + (this.LEFT_RULER_SIZE + _global.RULER_THICKNESS - _global.rulerBarsConfig.left.startPoint) + "px;}";
+			guideDefinition = ".tempGuideVertical{border:none;transform:scaleX(2.0);border-left:1px solid " + _global.rulerBarsConfig.tempGuideColor + ";pointer-events:none;position:absolute;left:0;top:-" + _global.RULER_THICKNESS + "px;height:" + (_global.rulerBarsConfig.left.size + _global.RULER_THICKNESS - _global.rulerBarsConfig.left.startPoint) + "px;}";
+			guideDefinition += "\n.verticalGuideLine{border:none;transform:scaleX(2.0);border-left:1px solid " + _global.rulerBarsConfig.guideColor + ";pointer-events:none;position:absolute;left:0;top:-" + _global.RULER_THICKNESS + "px;height:" + (_global.rulerBarsConfig.left.size + _global.RULER_THICKNESS - _global.rulerBarsConfig.left.startPoint) + "px;}";
 		}
 		Util.applyCSSRule(guideDefinition, "guideDefinition_" + config.side);
 
@@ -341,8 +341,8 @@
 	};
 
 	var rulerMouseDown = function(e, config, ruler) {
-		this.rulerParent.classList.add("noselect");
-		if (!this.guides) {
+		_global.rulerBarsConfig.parent.classList.add("noselect");
+		if (!_global.guides) {
 			return;
 		}
 		var offsetProp = (config.side === "top") ? "offsetX" : "offsetY";
@@ -354,7 +354,7 @@
 	};
 
 	var rulerMouseMove = function(e, config, ruler) {
-		if (!this.guides) {
+		if (!_global.guides) {
 			return;
 		}
 		var tmpGuide = (config.side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE;
@@ -367,8 +367,8 @@
 	};
 
 	var rulerMouseUp = function(e, config, ruler) {
-		this.rulerParent.classList.remove("noselect");
-		if (!this.guides) {
+		_global.rulerBarsConfig.parent.classList.remove("noselect");
+		if (!_global.guides) {
 			return;
 		}
 		var offsetProp = (config.side === "top") ? "offsetX" : "offsetY";
@@ -405,7 +405,7 @@
 	};
 
 	var rulerMouseOut = function(e, config, ruler) {
-		this.rulerParent.classList.remove("noselect");
+		_global.rulerBarsConfig.parent.classList.remove("noselect");
 		if (_global.activeGuide) {
 			adjustGuidePosition(e, config, ruler, false);
 		}
@@ -414,7 +414,7 @@
 	};
 
 	var rulerClick = function(e, config, ruler) {
-		if (!this.guides) {
+		if (!_global.guides) {
 			return;
 		}
 		var offsetProp = (config.side === "top") ? "offsetX" : "offsetY";
@@ -442,14 +442,14 @@
 	 * Remove the rulers from DOM
 	 */
 	RulerBars.prototype.destroy = function() {
-		if (this.rulerParent) {
-			this.rulerParent.classList.remove("noselect");
+		if (_global.rulerBarsConfig && _global.rulerBarsConfig.parent) {
+			_global.rulerBarsConfig.parent.classList.remove("noselect");
 		}
 		var rulerElements = document.querySelectorAll(".ruler, .rulerCornerBox");
 		[].forEach.call(rulerElements, function(rulerElem) {
 			rulerElem.parentNode.removeChild(rulerElem);
 		});
-		this.rulerBarsCreated = false;
+		_global.rulerBarsCreated = false;
 		_global.rulerBarsConfig = null;
 		Util.resetGlobal();
 	};
@@ -487,7 +487,7 @@
 	 * Enable the guides functionality for rulers.
 	 */
 	RulerBars.prototype.enableGuides = function() {
-		this.guides = true;
+		_global.guides = true;
 		[].forEach.call(document.querySelectorAll(".rulerBar"), function(rulerBar) {
 			rulerBar.classList.add("guideEnabled");
 		});
@@ -500,7 +500,7 @@
 	 * Disable the guides functionality for rulers.
 	 */
 	RulerBars.prototype.disableGuides = function() {
-		this.guides = false;
+		_global.guides = false;
 		[].forEach.call(document.querySelectorAll(".rulerBar"), function(rulerBar) {
 			rulerBar.classList.remove("guideEnabled");
 		});
@@ -543,11 +543,11 @@
 	};
 
 	var showTemporaryGuide = function(e, side) {
-		if (!this.guides) {
+		if (!_global.guides) {
 			return;
 		}
 		var tmpGuide = (side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE;
-		var currentRuler = (side === "top") ? this.topRuler : this.leftRuler;
+		var currentRuler = (side === "top") ? _global.topRuler : _global.leftRuler;
 		var direction = (side === "top") ? "left" : "top";
 		var offsetProp = (side === "top") ? "offsetX" : "offsetY";
 
@@ -578,13 +578,13 @@
 			scale = 1;
 		}
 		_global.zoomVal = scale;
-		if (!this.rulerBarsCreated || !this.topRuler || !this.leftRuler) {
+		if (!_global.rulerBarsCreated || !_global.topRuler || !_global.leftRuler) {
 			return;
 		}
 		/* default thickness scale = 2 */
 		var guideLineThicknessScale = (2 / scale);
-		var horizontalGuideLineSize = ((this.TOP_RULER_SIZE - _global.rulerBarsConfig.top.startPoint) * scale) + _global.RULER_THICKNESS;
-		var verticalGuideLineSize = ((this.LEFT_RULER_SIZE - _global.rulerBarsConfig.left.startPoint) * scale) + _global.RULER_THICKNESS;
+		var horizontalGuideLineSize = ((_global.rulerBarsConfig.top.size - _global.rulerBarsConfig.top.startPoint) * scale) + _global.RULER_THICKNESS;
+		var verticalGuideLineSize = ((_global.rulerBarsConfig.left.size - _global.rulerBarsConfig.left.startPoint) * scale) + _global.RULER_THICKNESS;
 
 		var rulerZoomConfig = "";
 		rulerZoomConfig += ".verticalGuideLine{transform-origin:0 0;height:" + verticalGuideLineSize + "px;transform:scale(" + guideLineThicknessScale + ",1);}";
@@ -595,10 +595,10 @@
 		rulerZoomConfig += "\n.ruler.left .big, .ruler.left .medium, .ruler.left .small{transform-origin:0 0;transform:scaleY(" + (1 / scale) + ");}";
 		Util.applyCSSRule(rulerZoomConfig, "rulerZoomConfig");
 
-		this.topRuler.style.transformOrigin = "0 0";
-		this.topRuler.style.transform = "scaleX(" + scale + ")";
-		this.leftRuler.style.transformOrigin = "0 0";
-		this.leftRuler.style.transform = "scaleY(" + scale + ")";
+		_global.topRuler.style.transformOrigin = "0 0";
+		_global.topRuler.style.transform = "scaleX(" + scale + ")";
+		_global.leftRuler.style.transformOrigin = "0 0";
+		_global.leftRuler.style.transform = "scaleY(" + scale + ")";
 	};
 
 	/**
@@ -621,7 +621,7 @@
 	 * @cfg: configuration for updating the rulers - same as the cfg for createRulers
 	 */
 	RulerBars.prototype.updateRulers = function(cfg) {
-		if (!this.rulerBarsCreated) {
+		if (!_global.rulerBarsCreated) {
 			throw new Error("RulerBars does not exist, use createRulers instead of updateRulers.");
 		}
 		if (!cfg || !cfg.top || !cfg.left) {
@@ -632,9 +632,11 @@
 		var _cachedZoomVal = _global.zoomVal || 1;
 		var _cachedTopStartPoint = _global.rulerBarsConfig.top.startPoint || 0;
 		var _cachedLeftStartPoint = _global.rulerBarsConfig.left.startPoint || 0;
+		var _cachedIsGuidesEnabled = _global.guides;
 		var isVisible = this.isVisible();
-		this.rulerBarsCreated = false;
+		_global.rulerBarsCreated = false;
 		this.createRulers(cfg);
+		_global.guides = _cachedIsGuidesEnabled;
 
 		var topGuide, leftGuide, delta, simulatedEvent, _newGuide;
 		var topStartPoint = cfg.top.startPoint || 0;
@@ -646,8 +648,8 @@
 				delta = _cachedTopStartPoint - topStartPoint;
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
-				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.top, this.topRuler);
-				if (simulatedEvent[guideEntry.guide.offsetProp] < topStartPoint || (simulatedEvent[guideEntry.guide.offsetProp] - topStartPoint - (topStartPoint % 10)) <= _global.RULER_THICKNESS) {
+				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.top, _global.topRuler);
+				if (simulatedEvent[guideEntry.guide.offsetProp] < topStartPoint || (topStartPoint < _global.RULER_THICKNESS && (simulatedEvent[guideEntry.guide.offsetProp] - topStartPoint - (topStartPoint % 10)) <= _global.RULER_THICKNESS)) {
 					_newGuide.guideLine.classList.add("invisible");
 				}
 			}
@@ -658,8 +660,8 @@
 				delta = _cachedLeftStartPoint - leftStartPoint;
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
-				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.left, this.leftRuler);
-				if (simulatedEvent[guideEntry.guide.offsetProp] < leftStartPoint || (simulatedEvent[guideEntry.guide.offsetProp] - leftStartPoint - (leftStartPoint % 10)) <= _global.RULER_THICKNESS) {
+				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.left, _global.leftRuler);
+				if (simulatedEvent[guideEntry.guide.offsetProp] < leftStartPoint || (leftStartPoint < _global.RULER_THICKNESS && (simulatedEvent[guideEntry.guide.offsetProp] - leftStartPoint - (leftStartPoint % 10)) <= _global.RULER_THICKNESS)) {
 					_newGuide.guideLine.classList.add("invisible");
 				}
 			}
@@ -686,7 +688,7 @@
 	 * @cfg.zIndex: The zIndex value for the Rulers.
 	 */
 	RulerBars.prototype.createRulers = function(cfg) {
-		if (this.rulerBarsCreated) {
+		if (_global.rulerBarsCreated) {
 			throw new Error("RulerBars already created. use updateRulers instead of createRulers.");
 		}
 		if (!cfg || !cfg.top || !cfg.left) {
@@ -706,17 +708,12 @@
 		_global.rulerBarsConfig.parent = cfg.parent || document.querySelector("body");
 		_global.rulerBarsConfig.element = cfg.element;
 
-		this.TOP_RULER_SIZE = _global.rulerBarsConfig.top.size;
-		this.LEFT_RULER_SIZE = _global.rulerBarsConfig.left.size;
-
 		_global.rulerBarsConfig.zIndex = !isNaN(_global.rulerBarsConfig.zIndex) ? _global.rulerBarsConfig.zIndex : 0;
 		_global.rulerBarsConfig.top.side = "top";
 		_global.rulerBarsConfig.left.side = "left";
 
-		this.topRuler = getRuler(_global.rulerBarsConfig.top);
-		this.leftRuler = getRuler(_global.rulerBarsConfig.left);
-
-		this.rulerParent = _global.rulerBarsConfig.parent;
+		_global.topRuler = getRuler(_global.rulerBarsConfig.top);
+		_global.leftRuler = getRuler(_global.rulerBarsConfig.left);
 
 		var rulerCorner = document.createElement("div");
 		rulerCorner.className = "rulerCornerBox";
@@ -726,10 +723,10 @@
 		rulerCorner.style.top = rulerCorner.style.left = "0px";
 		_global.rulerBarsConfig.parent.appendChild(rulerCorner);
 
-		_global.rulerBarsConfig.parent.appendChild(this.topRuler);
-		_global.rulerBarsConfig.parent.appendChild(this.leftRuler);
+		_global.rulerBarsConfig.parent.appendChild(_global.topRuler);
+		_global.rulerBarsConfig.parent.appendChild(_global.leftRuler);
 
-		this.rulerBarsCreated = true;
+		_global.rulerBarsCreated = true;
 		this.zoom(_cachedZoomVal);
 	};
 
