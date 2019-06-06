@@ -228,6 +228,7 @@
 		var rulerBG = document.createElement("div");
 		rulerBG.className = "rulerBG rulerBG_" + config.side;
 		rulerBG.style.backgroundColor = _global.rulerBarsConfig.backgroundColor;
+		rulerBG.style.boxSizing = "border-box";
 		ruler.appendChild(rulerBG);
 		var big = document.createElement("div");
 		big.className = "big";
@@ -746,6 +747,7 @@
 		_global.topRulerOuterBorder.style.top = 0;
 		_global.topRulerOuterBorder.style.left = 0;
 		_global.topRulerOuterBorder.style.right = 0;
+		_global.topRulerOuterBorder.style.maxWidth = (parseInt(getComputedStyle(_global.topRuler.querySelector(".rulerBG"), null)["width"], 10) - 20) + "px";
 		_global.topRulerOuterBorder.style.zIndex = _global.rulerBarsConfig.zIndex + 2;
 		_global.rulerBarsConfig.parent.appendChild(_global.topRulerOuterBorder);
 
@@ -755,6 +757,7 @@
 		_global.leftRulerOuterBorder.style.top = 0;
 		_global.leftRulerOuterBorder.style.left = 0;
 		_global.leftRulerOuterBorder.style.bottom = 0;
+		_global.leftRulerOuterBorder.style.maxHeight = (parseInt(getComputedStyle(_global.leftRuler.querySelector(".rulerBG"), null)["height"], 10) - 20) + "px";
 		_global.leftRulerOuterBorder.style.zIndex = _global.rulerBarsConfig.zIndex + 2;
 		_global.rulerBarsConfig.parent.appendChild(_global.leftRulerOuterBorder);
 
