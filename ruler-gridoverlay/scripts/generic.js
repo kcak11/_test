@@ -153,7 +153,9 @@ var createRulers = function() {
 			startPoint : Math.ceil(-leftStartPoint / scale)
 		},
 		element : imgElem,
-		zIndex : 150
+		zIndex : 150,
+		outerBorderColor : "#f00",
+		outerBorderThickness : "2px"
 	});
 };
 
@@ -182,7 +184,9 @@ var pan = function(left, top) {
 			startPoint : Math.ceil(-leftStartPoint / scale)
 		},
 		element : imgElem,
-		zIndex : 150
+		zIndex : 150,
+		outerBorderColor : "#f00",
+		outerBorderThickness : "2px"
 	});
 };
 

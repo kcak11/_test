@@ -208,6 +208,8 @@
 		config = config || {};
 		_global.rulerBarsConfig.backgroundColor = _global.rulerBarsConfig.backgroundColor || "#fff";
 		_global.rulerBarsConfig.foregroundColor = _global.rulerBarsConfig.foregroundColor || "#000";
+		_global.rulerBarsConfig.outerBorderColor = _global.rulerBarsConfig.outerBorderColor || "#000";
+		_global.rulerBarsConfig.outerBorderThickness = _global.rulerBarsConfig.outerBorderThickness || "1px";
 		config.side = (config.side === "left") ? config.side : "top";
 		config.size = parseInt(config.size, 10) || 100;
 		_global.rulerBarsConfig.tempGuideColor = _global.rulerBarsConfig.tempGuideColor || "#ffaaab";
@@ -283,6 +285,11 @@
 
 		ruler.appendChild((config.side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE);
 		ruler.style.zIndex = _global.rulerBarsConfig.zIndex;
+
+		var outerBorderDefinition = "";
+		outerBorderDefinition += ".topRulerOuterBorder, .rulerBG_top {border-top:" + _global.rulerBarsConfig.outerBorderThickness + " solid " + _global.rulerBarsConfig.outerBorderColor + ";}";
+		outerBorderDefinition += ".leftRulerOuterBorder, .rulerBG_left {border-left:" + _global.rulerBarsConfig.outerBorderThickness + " solid " + _global.rulerBarsConfig.outerBorderColor + ";}";
+		Util.applyCSSRule(outerBorderDefinition, "outerBorderDefinition");
 
 		ruler.addEventListener("mousedown", function(e) {
 			rulerMouseDown(e, config, ruler);
@@ -445,7 +452,7 @@
 		if (_global.rulerBarsConfig && _global.rulerBarsConfig.parent) {
 			_global.rulerBarsConfig.parent.classList.remove("noselect");
 		}
-		var rulerElements = document.querySelectorAll(".ruler, .rulerCornerBox");
+		var rulerElements = document.querySelectorAll(".ruler, .rulerCornerBox, .rulerOuterBorder");
 		[].forEach.call(rulerElements, function(rulerElem) {
 			rulerElem.parentNode.removeChild(rulerElem);
 		});
@@ -458,7 +465,7 @@
 	 * Show the hidden rulers by removing css class "invisible".
 	 */
 	RulerBars.prototype.showRulers = function() {
-		var rulerElements = document.querySelectorAll(".ruler, .rulerCornerBox");
+		var rulerElements = document.querySelectorAll(".ruler, .rulerCornerBox, .rulerOuterBorder");
 		[].forEach.call(rulerElements, function(rulerElem) {
 			rulerElem.classList.remove("invisible");
 		});
@@ -469,7 +476,7 @@
 	 * Hide the rulers by adding css class "invisible".
 	 */
 	RulerBars.prototype.hideRulers = function() {
-		var rulerElements = document.querySelectorAll(".ruler, .rulerCornerBox");
+		var rulerElements = document.querySelectorAll(".ruler, .rulerCornerBox, .rulerOuterBorder");
 		[].forEach.call(rulerElements, function(rulerElem) {
 			rulerElem.classList.add("invisible");
 		});
@@ -599,6 +606,11 @@
 		_global.topRuler.style.transform = "scaleX(" + scale + ")";
 		_global.leftRuler.style.transformOrigin = "0 0";
 		_global.leftRuler.style.transform = "scaleY(" + scale + ")";
+
+		_global.topRulerOuterBorder.style.transformOrigin = "0 0";
+		_global.topRulerOuterBorder.style.transform = "scaleX(" + (scale) + ")";
+		_global.leftRulerOuterBorder.style.transformOrigin = "0 0";
+		_global.leftRulerOuterBorder.style.transform = "scaleY(" + (scale) + ")";
 	};
 
 	/**
@@ -686,6 +698,8 @@
 	 * @cfg.tempGuideColor: The color for the temporary Guide.
 	 * @cfg.guideColor: The color for the Guide (which has been dropped on the ruler)
 	 * @cfg.zIndex: The zIndex value for the Rulers.
+	 * @cfg.outerBorderColor: The color of outer border.
+	 * @cfg.outerBorderThickness: The width of outer border in pixels.
 	 */
 	RulerBars.prototype.createRulers = function(cfg) {
 		if (_global.rulerBarsCreated) {
@@ -725,6 +739,24 @@
 
 		_global.rulerBarsConfig.parent.appendChild(_global.topRuler);
 		_global.rulerBarsConfig.parent.appendChild(_global.leftRuler);
+
+		_global.topRulerOuterBorder = document.createElement("div");
+		_global.topRulerOuterBorder.className = "rulerOuterBorder topRulerOuterBorder";
+		_global.topRulerOuterBorder.style.position = "absolute";
+		_global.topRulerOuterBorder.style.top = 0;
+		_global.topRulerOuterBorder.style.left = 0;
+		_global.topRulerOuterBorder.style.right = 0;
+		_global.topRulerOuterBorder.style.zIndex = _global.rulerBarsConfig.zIndex + 2;
+		_global.rulerBarsConfig.parent.appendChild(_global.topRulerOuterBorder);
+
+		_global.leftRulerOuterBorder = document.createElement("div");
+		_global.leftRulerOuterBorder.className = "rulerOuterBorder leftRulerOuterBorder";
+		_global.leftRulerOuterBorder.style.position = "absolute";
+		_global.leftRulerOuterBorder.style.top = 0;
+		_global.leftRulerOuterBorder.style.left = 0;
+		_global.leftRulerOuterBorder.style.bottom = 0;
+		_global.leftRulerOuterBorder.style.zIndex = _global.rulerBarsConfig.zIndex + 2;
+		_global.rulerBarsConfig.parent.appendChild(_global.leftRulerOuterBorder);
 
 		_global.rulerBarsCreated = true;
 		this.zoom(_cachedZoomVal);
