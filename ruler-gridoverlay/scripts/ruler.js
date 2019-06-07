@@ -261,8 +261,12 @@
 		}
 		ruler.style[config.side === "top" ? "width" : "height"] = ((ctr * _global.unitSize) - _global.unitSize) + "px";
 
+		var rulerBGAdditionalSize = 0;
+		if (startPointDelta > 0) {
+			rulerBGAdditionalSize = 10;
+		}
 		ruler.style[config.side === "top" ? "left" : "top"] = (rulerThickness - startPointDelta) + "px";
-		rulerBG.style[config.side === "top" ? "width" : "height"] = ((ctr * _global.unitSize) + rulerThickness - startPointDelta) + "px";
+		rulerBG.style[config.side === "top" ? "width" : "height"] = ((ctr * _global.unitSize) + rulerThickness - startPointDelta + rulerBGAdditionalSize) + "px";
 		rulerBG.style[config.side === "top" ? "border-bottom" : "border-right"] = "1px solid " + _global.rulerBarsConfig.foregroundColor;
 		rulerBG.style[config.side === "top" ? "height" : "width"] = rulerThickness + "px";
 		rulerBG.style[config.side === "top" ? "top" : "left"] = (-1 * rulerThickness) + "px";
