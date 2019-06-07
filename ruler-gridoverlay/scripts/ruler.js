@@ -152,6 +152,113 @@
 	 * Register default CSS
 	 */
 	var registerDefaultCSS = function() {
+		var rulerCSS = " \
+			.ruler { \
+				position: absolute; \
+				top: 30px; \
+				left: 30px; \
+				box-sizing: border-box; \
+			} \
+			 \
+			.rulerBG { \
+				position: absolute; \
+			} \
+			 \
+			.ruler.top { \
+				border-bottom: 1px solid #000; \
+			} \
+			 \
+			.ruler.top.guideEnabled { \
+				cursor: col-resize; \
+			} \
+			 \
+			.ruler.left { \
+				border-right: 1px solid #000; \
+			} \
+			 \
+			.ruler.left.guideEnabled { \
+				cursor: row-resize; \
+			} \
+			 \
+			.ruler.top .big, .ruler.top .medium, .ruler.top .small { \
+				position: absolute; \
+				width: 10px; \
+				border-left: 1px solid #000; \
+				box-sizing: border-box; \
+				pointer-events: none; \
+			} \
+			 \
+			.ruler.left .big, .ruler.left .medium, .ruler.left .small { \
+				position: absolute; \
+				height: 10px; \
+				border-top: 1px solid #000; \
+				box-sizing: border-box; \
+				pointer-events: none; \
+			} \
+			 \
+			.ruler.top .big { \
+				top: -20px; \
+				height: 20px; \
+			} \
+			 \
+			.ruler.top .medium { \
+				top: -10px; \
+				height: 10px; \
+			} \
+			 \
+			.ruler.top .small { \
+				top: -5px; \
+				height: 5px; \
+			} \
+			 \
+			.ruler.left .big { \
+				left: -20px; \
+				width: 20px; \
+			} \
+			 \
+			.ruler.left .medium { \
+				left: -10px; \
+				width: 10px; \
+			} \
+			 \
+			.ruler.left .small { \
+				left: -5px; \
+				width: 5px; \
+			} \
+			 \
+			.ruler.top .big:before { \
+				content: attr(unit-value); \
+				font-size: 8px; \
+				font-family: Verdana; \
+				position: absolute; \
+				top: -3px; \
+				left: 2px; \
+				text-align: left; \
+			} \
+			 \
+			.ruler.left .big:before { \
+				content: attr(unit-value); \
+				font-size: 8px; \
+				font-family: Verdana; \
+				position: absolute; \
+				right: 8px; \
+				bottom: 2px; \
+				text-align: left; \
+				transform-origin: 0 0; \
+				transform: rotate(-90deg); \
+				width: 15px; \
+			} \
+			 \
+			.noselect { \
+				-webkit-touch-callout: none; \
+				-webkit-user-select: none; \
+				-khtml-user-select: none; \
+				-moz-user-select: none; \
+				-ms-user-select: none; \
+				user-select: none; \
+			}";
+		Util.applyCSSRule(rulerCSS, "rulerDefaultCSS");
+
 		var cssDefinition = "";
 		cssDefinition += ".invisible{visibility:hidden;}";
 		Util.applyCSSRule(cssDefinition, "ruler_default_css");
@@ -208,8 +315,10 @@
 		config = config || {};
 		_global.rulerBarsConfig.backgroundColor = _global.rulerBarsConfig.backgroundColor || "#fff";
 		_global.rulerBarsConfig.foregroundColor = _global.rulerBarsConfig.foregroundColor || "#000";
+		_global.rulerBarsConfig.unitFontColor = _global.rulerBarsConfig.unitFontColor || "#000";
 		_global.rulerBarsConfig.outerBorderColor = _global.rulerBarsConfig.outerBorderColor || "#000";
 		_global.rulerBarsConfig.outerBorderThickness = _global.rulerBarsConfig.outerBorderThickness || "1px";
+		_global.rulerBarsConfig.smallMediumEqual = Boolean(_global.rulerBarsConfig.smallMediumEqual) || false;
 		config.side = (config.side === "left") ? config.side : "top";
 		config.size = parseInt(config.size, 10) || 100;
 		_global.rulerBarsConfig.tempGuideColor = _global.rulerBarsConfig.tempGuideColor || "#ffaaab";
@@ -236,6 +345,9 @@
 		medium.className = "medium";
 		var small = document.createElement("div");
 		small.className = "small";
+		if (Boolean(_global.rulerBarsConfig.smallMediumEqual)) {
+			small.className = "medium";
+		}
 		var units = [ big, medium, small ];
 		var iterations = Math.ceil(config.size / _global.unitSize);
 		var unitAdjustment = 0;
@@ -272,10 +384,11 @@
 		rulerBG.style[config.side === "top" ? "top" : "left"] = (-1 * rulerThickness) + "px";
 		rulerBG.style[config.side === "top" ? "left" : "top"] = (-1 * (rulerThickness - startPointDelta + _global.unitSize)) + "px";
 
-		var colorDefinitionTop = ".ruler.top, .ruler.top .big, .ruler.top .medium, .ruler.top .small{border-color: {{fgColor}};color: {{fgColor}};}";
-		var colorDefinitionLeft = ".ruler.left, .ruler.left .big, .ruler.left .medium, .ruler.left .small  {border-color: {{fgColor}};color: {{fgColor}};}";
+		var colorDefinitionTop = ".ruler.top, .ruler.top .big, .ruler.top .medium, .ruler.top .small{border-color: {{fgColor}};color: {{unitColor}};}";
+		var colorDefinitionLeft = ".ruler.left, .ruler.left .big, .ruler.left .medium, .ruler.left .small  {border-color: {{fgColor}};color: {{unitColor}};}";
 		var colorDefinition = (config.side === "top") ? colorDefinitionTop : colorDefinitionLeft;
 		colorDefinition = colorDefinition.split("{{fgColor}}").join(_global.rulerBarsConfig.foregroundColor);
+		colorDefinition = colorDefinition.split("{{unitColor}}").join(_global.rulerBarsConfig.unitFontColor);
 		Util.applyCSSRule(colorDefinition, "rulerCSS_" + config.side);
 
 		var guideDefinition;
@@ -700,6 +813,8 @@
 	 * @cfg.element: The element of interest for the Ruler, helps in defining the outer boundaries for the Guide.
 	 * @cfg.backgroundColor: The background color for the Rulers.
 	 * @cfg.foregroundColor: The foreground color for the Rulers.
+	 * @cfg.unitFontColor: The font color for unit text.
+	 * @cfg.smallMediumEqual: Boolean value indicating that small & medium units display as medium.
 	 * @cfg.tempGuideColor: The color for the temporary Guide.
 	 * @cfg.guideColor: The color for the Guide (which has been dropped on the ruler)
 	 * @cfg.zIndex: The zIndex value for the Rulers.

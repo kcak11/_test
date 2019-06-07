@@ -155,7 +155,10 @@ var createRulers = function() {
 		element : imgElem,
 		zIndex : 150,
 		outerBorderColor : "#f00",
-		outerBorderThickness : "2px"
+		outerBorderThickness : "2px",
+		foregroundColor : "#f00",
+		unitFontColor : "#000",
+		//smallMediumEqual : true /* this ensures that small & medium lines are displayed as medium */
 	});
 };
 
@@ -186,7 +189,10 @@ var pan = function(left, top) {
 		element : imgElem,
 		zIndex : 150,
 		outerBorderColor : "#f00",
-		outerBorderThickness : "2px"
+		outerBorderThickness : "2px",
+		foregroundColor : "#f00",
+		unitFontColor : "#000",
+		//smallMediumEqual: true /* this ensures that small & medium lines are displayed as medium */
 	});
 };
 
