@@ -1,8 +1,8 @@
 /**
  * Copyright(c) - 2019 Ashish's Web
- * 
+ *
  * Author: K.C.Ashish Kumar
- * 
+ *
  * https://kcak11.com (or) https://ashishkumarkc.com
  */
 
@@ -154,9 +154,9 @@ var createRulers = function() {
 		},
 		element : imgElem,
 		zIndex : 150,
-		outerBorderColor : "#f00",
+		outerBorderColor : "rgb(191,191,191)",
 		outerBorderThickness : "2px",
-		foregroundColor : "#f00",
+		foregroundColor : "rgb(191,191,191)",
 		unitFontColor : "#000",
 		//smallMediumEqual : true /* this ensures that small & medium lines are displayed as medium */
 	});
@@ -188,9 +188,9 @@ var pan = function(left, top) {
 		},
 		element : imgElem,
 		zIndex : 150,
-		outerBorderColor : "#f00",
+		outerBorderColor : "rgb(191,191,191)",
 		outerBorderThickness : "2px",
-		foregroundColor : "#f00",
+		foregroundColor : "rgb(191,191,191)",
 		unitFontColor : "#000",
 		//smallMediumEqual: true /* this ensures that small & medium lines are displayed as medium */
 	});
