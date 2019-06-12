@@ -811,6 +811,8 @@
 	 * @cfg.left: Configuration for Left Ruler See config param for getRuler()
 	 * @cfg.parent: The parent container where the Rulers need to be appended.
 	 * @cfg.element: The element of interest for the Ruler, helps in defining the outer boundaries for the Guide.
+	 * @cfg.elementWidth: The width of element, helps in determining the boundary for Guides for Top Ruler.
+	 * @cfg.elementHeight: The height of element, helps in determining the boundary for Guides for Left Ruler.
 	 * @cfg.backgroundColor: The background color for the Rulers.
 	 * @cfg.foregroundColor: The foreground color for the Rulers.
 	 * @cfg.unitFontColor: The font color for unit text.
@@ -832,8 +834,8 @@
 		/* Destroy existing Rulers */
 		this.destroy();
 		if (cfg.element && typeof cfg.element.offsetWidth === "number" && typeof cfg.element.offsetHeight === "number") {
-			_global.elementWidth = cfg.element.offsetWidth;
-			_global.elementHeight = cfg.element.offsetHeight;
+			_global.elementWidth = !isNaN(cfg.elementWidth) ? cfg.elementWidth : cfg.element.offsetWidth;
+			_global.elementHeight = !isNaN(cfg.elementHeight) ? cfg.elementHeight : cfg.element.offsetHeight;
 		} else {
 			_global.elementWidth = 0;
 			_global.elementHeight = 0;
