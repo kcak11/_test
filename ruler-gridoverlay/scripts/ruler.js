@@ -635,6 +635,13 @@
 	};
 
 	/**
+	 * Determine if Guides are enabled
+	 */
+	RulerBars.prototype.isGuidesEnabled = function() {
+		return Boolean(_global.guides);
+	};
+
+	/**
 	 * Clear all the guides functionality for rulers.
 	 */
 	RulerBars.prototype.clearGuides = function() {
