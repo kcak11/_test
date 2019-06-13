@@ -1,8 +1,8 @@
 /**
  * Copyright(c) - 2019 Ashish's Web
- *
+ * 
  * Author: K.C.Ashish Kumar
- *
+ * 
  * https://kcak11.com (or) https://ashishkumarkc.com
  */
 
@@ -158,7 +158,7 @@ var createRulers = function() {
 		outerBorderThickness : "2px",
 		foregroundColor : "rgb(191,191,191)",
 		unitFontColor : "#000",
-		//smallMediumEqual : true /* this ensures that small & medium lines are displayed as medium */
+		// smallMediumEqual : true /* this ensures that small & medium lines are displayed as medium */
 	});
 };
 
@@ -177,23 +177,11 @@ var pan = function(left, top) {
 	var leftStartPoint = getComputedStyle(imgElem, null)["top"];
 	leftStartPoint = !isNaN(parseInt(leftStartPoint, 10)) ? parseInt(leftStartPoint, 10) : 0;
 
-	rulerBars.updateRulers({
-		top : {
-			size : 2000,
-			startPoint : Math.ceil(-topStartPoint / scale)
-		},
-		left : {
-			size : 1400,
-			startPoint : Math.ceil(-leftStartPoint / scale)
-		},
-		element : imgElem,
-		zIndex : 150,
-		outerBorderColor : "rgb(191,191,191)",
-		outerBorderThickness : "2px",
-		foregroundColor : "rgb(191,191,191)",
-		unitFontColor : "#000",
-		//smallMediumEqual: true /* this ensures that small & medium lines are displayed as medium */
-	});
+	var cfg = rulerBars.getConfig();
+	cfg.top.startPoint = Math.ceil(-topStartPoint / scale);
+	cfg.left.startPoint = Math.ceil(-leftStartPoint / scale);
+
+	rulerBars.updateRulers(cfg);
 };
 
 var panningTest = function() {

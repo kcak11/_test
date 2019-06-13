@@ -165,7 +165,7 @@
 			} \
 			 \
 			.ruler.top { \
-				border-bottom: 1px solid #000; \
+				border-bottom: none; \
 			} \
 			 \
 			.ruler.top.guideEnabled { \
@@ -173,7 +173,7 @@
 			} \
 			 \
 			.ruler.left { \
-				border-right: 1px solid #000; \
+				border-right: none; \
 			} \
 			 \
 			.ruler.left.guideEnabled { \
@@ -319,6 +319,7 @@
 		_global.rulerBarsConfig.outerBorderColor = _global.rulerBarsConfig.outerBorderColor || "#000";
 		_global.rulerBarsConfig.outerBorderThickness = _global.rulerBarsConfig.outerBorderThickness || "1px";
 		_global.rulerBarsConfig.smallMediumEqual = Boolean(_global.rulerBarsConfig.smallMediumEqual) || false;
+		_global.rulerBarsConfig.hideFirstUnitOnScale = Boolean(_global.rulerBarsConfig.hideFirstUnitOnScale) || false;
 		config.side = (config.side === "left") ? config.side : "top";
 		config.size = parseInt(config.size, 10) || 100;
 		_global.rulerBarsConfig.tempGuideColor = _global.rulerBarsConfig.tempGuideColor || "#ffaaab";
@@ -365,7 +366,7 @@
 				unit = medium.cloneNode(true);
 			}
 			unit.style[config.side === "top" ? "left" : "top"] = ((ctr * _global.unitSize) + unitAdjustment) + "px";
-			if (ctr === 0 && startPointDelta !== 0) {
+			if (ctr === 0 && _global.rulerBarsConfig.hideFirstUnitOnScale && startPointDelta !== 0) {
 				unit.style.visibility = "hidden";
 			}
 			ruler.appendChild(unit);
@@ -455,7 +456,7 @@
 		tmpGuide.classList.add("invisible");
 		if (_global.activeGuide) {
 			_global.activeGuide.guideLine.style[direction] = guidePosition + "px";
-			if (guidePosition < (rangeStart + startDelta) || (rangeEnd !== _global.UNSET && guidePosition > (rangeEnd - endDelta))) {
+			if ((startPoint % 10 === 0 && guidePosition < (rangeStart + startDelta)) || (startPoint % 10 !== 0 && guidePosition < (rangeStart + startDelta + startPoint % 10)) || (rangeEnd !== _global.UNSET && guidePosition > (rangeEnd - endDelta))) {
 				_global.activeGuide.guideLine.classList.add("invisible");
 				ruler.classList.remove("guideEnabled");
 			} else {
@@ -781,12 +782,11 @@
 		for (topGuide in _cachedTopGuides) {
 			var guideEntry = _cachedTopGuides[topGuide];
 			if (guideEntry && guideEntry.setByUser) {
-
 				delta = _cachedTopStartPoint - topStartPoint;
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
 				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.top, _global.topRuler);
-				if (simulatedEvent[guideEntry.guide.offsetProp] < topStartPoint || (topStartPoint < _global.RULER_THICKNESS && (simulatedEvent[guideEntry.guide.offsetProp] - topStartPoint - (topStartPoint % 10)) <= _global.RULER_THICKNESS)) {
+				if ((simulatedEvent[guideEntry.guide.offsetProp] < (_global.RULER_THICKNESS + _global.unitSize)) || ((-1 * topStartPoint) > _global.RULER_THICKNESS && simulatedEvent[guideEntry.guide.offsetProp] < topStartPoint) || (topStartPoint < _global.RULER_THICKNESS && (simulatedEvent[guideEntry.guide.offsetProp] - topStartPoint - (topStartPoint % 10)) <= _global.RULER_THICKNESS)) {
 					_newGuide.guideLine.classList.add("invisible");
 				}
 			}
@@ -798,7 +798,7 @@
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
 				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.left, _global.leftRuler);
-				if (simulatedEvent[guideEntry.guide.offsetProp] < leftStartPoint || (leftStartPoint < _global.RULER_THICKNESS && (simulatedEvent[guideEntry.guide.offsetProp] - leftStartPoint - (leftStartPoint % 10)) <= _global.RULER_THICKNESS)) {
+				if ((simulatedEvent[guideEntry.guide.offsetProp] < (_global.RULER_THICKNESS + _global.unitSize)) || ((-1 * leftStartPoint) > _global.RULER_THICKNESS && simulatedEvent[guideEntry.guide.offsetProp] < leftStartPoint) || (leftStartPoint < _global.RULER_THICKNESS && (simulatedEvent[guideEntry.guide.offsetProp] - leftStartPoint - (leftStartPoint % 10)) <= _global.RULER_THICKNESS)) {
 					_newGuide.guideLine.classList.add("invisible");
 				}
 			}
@@ -829,6 +829,7 @@
 	 * @cfg.zIndex: The zIndex value for the Rulers.
 	 * @cfg.outerBorderColor: The color of outer border.
 	 * @cfg.outerBorderThickness: The width of outer border in pixels.
+	 * @cfg.hideFirstUnitOnScale: Boolean -> Hide the first unit on the scale if the startPoint is not exactly divisible by 10
 	 */
 	RulerBars.prototype.createRulers = function(cfg) {
 		if (_global.rulerBarsCreated) {
