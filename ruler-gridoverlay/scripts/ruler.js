@@ -794,6 +794,12 @@
 		if (!isVisible) {
 			this.hideRulers();
 		}
+		
+		if (_global.guides) {
+			this.enableGuides();
+		} else {
+			this.disableGuides();
+		}
 	};
 
 	/**
