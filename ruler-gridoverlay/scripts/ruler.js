@@ -152,116 +152,99 @@
 	 * Register default CSS
 	 */
 	var registerDefaultCSS = function() {
-		var rulerCSS = " \
-			.ruler { \
-				position: absolute; \
-				top: 30px; \
-				left: 30px; \
-				box-sizing: border-box; \
-			} \
-			 \
-			.rulerBG { \
-				position: absolute; \
-			} \
-			 \
-			.ruler.top { \
-				border-bottom: none; \
-			} \
-			 \
-			.ruler.top.guideEnabled { \
-				cursor: col-resize; \
-			} \
-			 \
-			.ruler.left { \
-				border-right: none; \
-			} \
-			 \
-			.ruler.left.guideEnabled { \
-				cursor: row-resize; \
-			} \
-			 \
-			.ruler.top .big, .ruler.top .medium, .ruler.top .small { \
-				position: absolute; \
-				width: 10px; \
-				border-left: 1px solid #000; \
-				box-sizing: border-box; \
-				pointer-events: none; \
-			} \
-			 \
-			.ruler.left .big, .ruler.left .medium, .ruler.left .small { \
-				position: absolute; \
-				height: 10px; \
-				border-top: 1px solid #000; \
-				box-sizing: border-box; \
-				pointer-events: none; \
-			} \
-			 \
-			.ruler.top .big { \
-				top: -20px; \
-				height: 20px; \
-			} \
-			 \
-			.ruler.top .medium { \
-				top: -10px; \
-				height: 10px; \
-			} \
-			 \
-			.ruler.top .small { \
-				top: -5px; \
-				height: 5px; \
-			} \
-			 \
-			.ruler.left .big { \
-				left: -20px; \
-				width: 20px; \
-			} \
-			 \
-			.ruler.left .medium { \
-				left: -10px; \
-				width: 10px; \
-			} \
-			 \
-			.ruler.left .small { \
-				left: -5px; \
-				width: 5px; \
-			} \
-			 \
-			.ruler.top .big:before { \
-				content: attr(unit-value); \
-				font-size: 8px; \
-				font-family: Verdana; \
-				position: absolute; \
-				top: -3px; \
-				left: 2px; \
-				text-align: left; \
-			} \
-			 \
-			.ruler.left .big:before { \
-				content: attr(unit-value); \
-				font-size: 8px; \
-				font-family: Verdana; \
-				position: absolute; \
-				right: 8px; \
-				bottom: 2px; \
-				text-align: left; \
-				transform-origin: 0 0; \
-				transform: rotate(-90deg); \
-				width: 15px; \
-			} \
-			 \
-			.noselect { \
-				-webkit-touch-callout: none; \
-				-webkit-user-select: none; \
-				-khtml-user-select: none; \
-				-moz-user-select: none; \
-				-ms-user-select: none; \
-				user-select: none; \
-			}";
+		var rulerCSS = "";
+		rulerCSS += ".ruler {";
+		rulerCSS += "\n    position: absolute;";
+		rulerCSS += "\n    top: 30px;";
+		rulerCSS += "\n    left: 30px;";
+		rulerCSS += "\n    box-sizing: border-box;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.rulerBG {";
+		rulerCSS += "\n    position: absolute;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.top {";
+		rulerCSS += "\n    border-bottom: none;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.top.guideEnabled {";
+		rulerCSS += "\n    cursor: col-resize;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.left {";
+		rulerCSS += "\n    border-right: none;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.left.guideEnabled {";
+		rulerCSS += "\n    cursor: row-resize;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.top .big, .ruler.top .medium, .ruler.top .small {";
+		rulerCSS += "\n    position: absolute;";
+		rulerCSS += "\n    width: 10px;";
+		rulerCSS += "\n    border-left: 1px solid #000;";
+		rulerCSS += "\n    box-sizing: border-box;";
+		rulerCSS += "\n    pointer-events: none;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.left .big, .ruler.left .medium, .ruler.left .small {";
+		rulerCSS += "\n    position: absolute;";
+		rulerCSS += "\n    height: 10px;";
+		rulerCSS += "\n    border-top: 1px solid #000;";
+		rulerCSS += "\n    box-sizing: border-box;";
+		rulerCSS += "\n    pointer-events: none;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.top .big {";
+		rulerCSS += "\n    top: -20px;";
+		rulerCSS += "\n    height: 20px;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.top .medium {";
+		rulerCSS += "\n    top: -10px;";
+		rulerCSS += "\n    height: 10px;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.top .small {";
+		rulerCSS += "\n    top: -5px;";
+		rulerCSS += "\n    height: 5px;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.left .big {";
+		rulerCSS += "\n    left: -20px;";
+		rulerCSS += "\n    width: 20px;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.left .medium {";
+		rulerCSS += "\n    left: -10px;";
+		rulerCSS += "\n    width: 10px;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.left .small {";
+		rulerCSS += "\n    left: -5px;";
+		rulerCSS += "\n    width: 5px;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.top .big:before {";
+		rulerCSS += "\n    content: attr(unit-value);";
+		rulerCSS += "\n    font-size: 8px;";
+		rulerCSS += "\n    font-family: Verdana;";
+		rulerCSS += "\n    position: absolute;";
+		rulerCSS += "\n    top: -3px;";
+		rulerCSS += "\n    left: 2px;";
+		rulerCSS += "\n    text-align: left;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.ruler.left .big:before {";
+		rulerCSS += "\n    content: attr(unit-value);";
+		rulerCSS += "\n    font-size: 8px;";
+		rulerCSS += "\n    font-family: Verdana;";
+		rulerCSS += "\n    position: absolute;";
+		rulerCSS += "\n    right: 8px;";
+		rulerCSS += "\n    bottom: 2px;";
+		rulerCSS += "\n    text-align: left;";
+		rulerCSS += "\n    transform-origin: 0 0;";
+		rulerCSS += "\n    transform: rotate(-90deg);";
+		rulerCSS += "\n    width: 15px;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n[unit-value], [unit-value]:before, .noselect {";
+		rulerCSS += "\n    -webkit-touch-callout: none;";
+		rulerCSS += "\n    -webkit-user-select: none;";
+		rulerCSS += "\n    -khtml-user-select: none;";
+		rulerCSS += "\n    -moz-user-select: none;";
+		rulerCSS += "\n    -ms-user-select: none;";
+		rulerCSS += "\n    user-select: none;";
+		rulerCSS += "\n}";
+		rulerCSS += "\n.invisible {";
+		rulerCSS += "\n    visibility: hidden;";
+		rulerCSS += "\n}";
 		Util.applyCSSRule(rulerCSS, "rulerDefaultCSS");
-
-		var cssDefinition = "";
-		cssDefinition += ".invisible{visibility:hidden;}";
-		Util.applyCSSRule(cssDefinition, "ruler_default_css");
 	};
 
 	/**
@@ -779,6 +762,9 @@
 		var topGuide, leftGuide, delta, simulatedEvent, _newGuide;
 		var topStartPoint = cfg.top.startPoint || 0;
 		var leftStartPoint = cfg.left.startPoint || 0;
+		var topRulerLeft = parseInt(getComputedStyle(_global.topRuler, null)["left"], 10);
+		var leftRulerTop = parseInt(getComputedStyle(_global.leftRuler)["top"], 10);
+
 		for (topGuide in _cachedTopGuides) {
 			var guideEntry = _cachedTopGuides[topGuide];
 			if (guideEntry && guideEntry.setByUser) {
@@ -786,7 +772,7 @@
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
 				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.top, _global.topRuler);
-				if ((simulatedEvent[guideEntry.guide.offsetProp] < (_global.RULER_THICKNESS + _global.unitSize)) || ((-1 * topStartPoint) > _global.RULER_THICKNESS && simulatedEvent[guideEntry.guide.offsetProp] < topStartPoint) || (topStartPoint < _global.RULER_THICKNESS && (simulatedEvent[guideEntry.guide.offsetProp] - topStartPoint - (topStartPoint % 10)) <= _global.RULER_THICKNESS)) {
+				if ((topRulerLeft + parseInt(getComputedStyle(_newGuide.guideLine, null)["left"], 10)) < _global.RULER_THICKNESS) {
 					_newGuide.guideLine.classList.add("invisible");
 				}
 			}
@@ -798,7 +784,7 @@
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
 				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.left, _global.leftRuler);
-				if ((simulatedEvent[guideEntry.guide.offsetProp] < (_global.RULER_THICKNESS + _global.unitSize)) || ((-1 * leftStartPoint) > _global.RULER_THICKNESS && simulatedEvent[guideEntry.guide.offsetProp] < leftStartPoint) || (leftStartPoint < _global.RULER_THICKNESS && (simulatedEvent[guideEntry.guide.offsetProp] - leftStartPoint - (leftStartPoint % 10)) <= _global.RULER_THICKNESS)) {
+				if ((leftRulerTop + parseInt(getComputedStyle(_newGuide.guideLine, null)["top"], 10)) < _global.RULER_THICKNESS) {
 					_newGuide.guideLine.classList.add("invisible");
 				}
 			}
