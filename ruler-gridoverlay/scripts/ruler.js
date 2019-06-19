@@ -600,7 +600,7 @@
 		[].forEach.call(document.querySelectorAll(".rulerBar"), function(rulerBar) {
 			rulerBar.classList.add("guideEnabled");
 		});
-		[].forEach.call(document.querySelectorAll(".rulerGuideLine"), function(guideLine) {
+		[].forEach.call(document.querySelectorAll(".rulerGuideLine:not([hidden=\"yes\"])"), function(guideLine) {
 			guideLine.classList.remove("invisible");
 		});
 	};
@@ -774,6 +774,7 @@
 				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.top, _global.topRuler);
 				if ((topRulerLeft + parseInt(getComputedStyle(_newGuide.guideLine, null)["left"], 10)) < _global.RULER_THICKNESS) {
 					_newGuide.guideLine.classList.add("invisible");
+					_newGuide.guideLine.setAttribute("hidden", "yes");
 				}
 			}
 		}
@@ -786,6 +787,7 @@
 				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.left, _global.leftRuler);
 				if ((leftRulerTop + parseInt(getComputedStyle(_newGuide.guideLine, null)["top"], 10)) < _global.RULER_THICKNESS) {
 					_newGuide.guideLine.classList.add("invisible");
+					_newGuide.guideLine.setAttribute("hidden", "yes");
 				}
 			}
 		}
@@ -794,7 +796,7 @@
 		if (!isVisible) {
 			this.hideRulers();
 		}
-		
+
 		if (_global.guides) {
 			this.enableGuides();
 		} else {
