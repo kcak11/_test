@@ -158,7 +158,7 @@ var createRulers = function() {
 		outerBorderThickness : "2px",
 		foregroundColor : "rgb(191,191,191)",
 		unitFontColor : "#000",
-		// smallMediumEqual : true /* this ensures that small & medium lines are displayed as medium */
+		// congruentUnits : true /* this ensures that small & medium lines are sized congruently */
 	});
 };
 

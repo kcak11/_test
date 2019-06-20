@@ -301,7 +301,7 @@
 		_global.rulerBarsConfig.unitFontColor = _global.rulerBarsConfig.unitFontColor || "#000";
 		_global.rulerBarsConfig.outerBorderColor = _global.rulerBarsConfig.outerBorderColor || "#000";
 		_global.rulerBarsConfig.outerBorderThickness = _global.rulerBarsConfig.outerBorderThickness || "1px";
-		_global.rulerBarsConfig.smallMediumEqual = Boolean(_global.rulerBarsConfig.smallMediumEqual) || false;
+		_global.rulerBarsConfig.congruentUnits = Boolean(_global.rulerBarsConfig.congruentUnits) || false;
 		_global.rulerBarsConfig.hideFirstUnitOnScale = Boolean(_global.rulerBarsConfig.hideFirstUnitOnScale) || false;
 		config.side = (config.side === "left") ? config.side : "top";
 		config.size = parseInt(config.size, 10) || 100;
@@ -329,7 +329,7 @@
 		medium.className = "medium";
 		var small = document.createElement("div");
 		small.className = "small";
-		if (Boolean(_global.rulerBarsConfig.smallMediumEqual)) {
+		if (Boolean(_global.rulerBarsConfig.congruentUnits)) {
 			small.className = "medium";
 		}
 		var units = [ big, medium, small ];
@@ -817,7 +817,7 @@
 	 * @cfg.backgroundColor: The background color for the Rulers.
 	 * @cfg.foregroundColor: The foreground color for the Rulers.
 	 * @cfg.unitFontColor: The font color for unit text.
-	 * @cfg.smallMediumEqual: Boolean value indicating that small & medium units display as medium.
+	 * @cfg.congruentUnits: Boolean value indicating that small & medium units are sized congruently.
 	 * @cfg.tempGuideColor: The color for the temporary Guide.
 	 * @cfg.guideColor: The color for the Guide (which has been dropped on the ruler)
 	 * @cfg.zIndex: The zIndex value for the Rulers.
