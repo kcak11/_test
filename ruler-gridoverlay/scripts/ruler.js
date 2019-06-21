@@ -763,7 +763,7 @@
 		var topStartPoint = cfg.top.startPoint || 0;
 		var leftStartPoint = cfg.left.startPoint || 0;
 		var topRulerLeft = parseInt(getComputedStyle(_global.topRuler, null)["left"], 10);
-		var leftRulerTop = parseInt(getComputedStyle(_global.leftRuler)["top"], 10);
+		var leftRulerTop = parseInt(getComputedStyle(_global.leftRuler, null)["top"], 10);
 
 		for (topGuide in _cachedTopGuides) {
 			var guideEntry = _cachedTopGuides[topGuide];
