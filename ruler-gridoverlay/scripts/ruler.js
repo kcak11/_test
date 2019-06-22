@@ -762,8 +762,8 @@
 		var topGuide, leftGuide, delta, simulatedEvent, _newGuide;
 		var topStartPoint = cfg.top.startPoint || 0;
 		var leftStartPoint = cfg.left.startPoint || 0;
-		var topRulerLeft = parseInt(getComputedStyle(_global.topRuler, null)["left"], 10);
-		var leftRulerTop = parseInt(getComputedStyle(_global.leftRuler, null)["top"], 10);
+		var topRulerTop = _global.topRuler.getBoundingClientRect().top;
+		var leftRulerLeft = _global.leftRuler.getBoundingClientRect().left;
 
 		for (topGuide in _cachedTopGuides) {
 			var guideEntry = _cachedTopGuides[topGuide];
@@ -772,7 +772,7 @@
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
 				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.top, _global.topRuler);
-				if ((topRulerLeft + parseInt(getComputedStyle(_newGuide.guideLine, null)["left"], 10)) < _global.RULER_THICKNESS) {
+				if (_newGuide.guideLine.getBoundingClientRect().left < leftRulerLeft) {
 					_newGuide.guideLine.classList.add("invisible");
 					_newGuide.guideLine.setAttribute("hidden", "yes");
 				}
@@ -785,7 +785,7 @@
 				simulatedEvent = {};
 				simulatedEvent[guideEntry.guide.offsetProp] = guideEntry.guide[guideEntry.guide.offsetProp] + delta;
 				_newGuide = new Guide(simulatedEvent, _global.rulerBarsConfig.left, _global.leftRuler);
-				if ((leftRulerTop + parseInt(getComputedStyle(_newGuide.guideLine, null)["top"], 10)) < _global.RULER_THICKNESS) {
+				if (_newGuide.guideLine.getBoundingClientRect().top < topRulerTop) {
 					_newGuide.guideLine.classList.add("invisible");
 					_newGuide.guideLine.setAttribute("hidden", "yes");
 				}
