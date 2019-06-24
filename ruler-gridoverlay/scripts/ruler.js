@@ -843,6 +843,9 @@
 			_global.elementHeight = 0;
 		}
 		_global.rulerBarsConfig = Util.createConfig(cfg);
+		_global.rulerBarsConfig.top.startPoint && (_global.rulerBarsConfig.top.startPoint = Math.floor(_global.rulerBarsConfig.top.startPoint));
+		_global.rulerBarsConfig.left.startPoint && (_global.rulerBarsConfig.left.startPoint = Math.floor(_global.rulerBarsConfig.left.startPoint));
+
 		_global.rulerBarsConfig.parent = cfg.parent || document.querySelector("body");
 		_global.rulerBarsConfig.element = cfg.element;
 
