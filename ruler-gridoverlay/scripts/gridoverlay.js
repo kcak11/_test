@@ -69,7 +69,7 @@
 			gridSize = Math.max(10, (this.gridScale * 10));
 			if (container === element) {
 				/* Use an alternative zooming approach when container and element are the same */
-				gridSize = 10 + (this.gridScale * 10);
+				gridSize = Math.max(2, (this.gridScale * 10));
 			}
 			var width = element.offsetWidth;
 			var height = element.offsetHeight;
