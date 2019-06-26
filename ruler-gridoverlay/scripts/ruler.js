@@ -377,11 +377,11 @@
 
 		var guideDefinition;
 		if (config.side === "left") {
-			guideDefinition = ".tempGuideHorizontal{border:none;transform:scaleY(2.0);border-top:1px solid " + _global.rulerBarsConfig.tempGuideColor + ";pointer-events:none;position:absolute;left:-" + _global.RULER_THICKNESS + "px;top:0;width:" + (_global.rulerBarsConfig.top.size + _global.RULER_THICKNESS - _global.rulerBarsConfig.top.startPoint) + "px;}";
-			guideDefinition += "\n.horizontalGuideLine{border:none;transform:scaleY(2.0);border-top:1px solid " + _global.rulerBarsConfig.guideColor + ";pointer-events:none;position:absolute;left:-" + _global.RULER_THICKNESS + "px;top:0;width:" + (_global.rulerBarsConfig.top.size + _global.RULER_THICKNESS - _global.rulerBarsConfig.top.startPoint) + "px;}";
+			guideDefinition = ".tempGuideHorizontal{border:none;border-top:1px solid " + _global.rulerBarsConfig.tempGuideColor + ";pointer-events:none;position:absolute;left:-" + _global.RULER_THICKNESS + "px;top:0;width:" + (_global.rulerBarsConfig.top.size + _global.RULER_THICKNESS - _global.rulerBarsConfig.top.startPoint) + "px;}";
+			guideDefinition += "\n.horizontalGuideLine{border:none;border-top:1px solid " + _global.rulerBarsConfig.guideColor + ";pointer-events:none;position:absolute;left:-" + _global.RULER_THICKNESS + "px;top:0;width:" + (_global.rulerBarsConfig.top.size + _global.RULER_THICKNESS - _global.rulerBarsConfig.top.startPoint) + "px;}";
 		} else {
-			guideDefinition = ".tempGuideVertical{border:none;transform:scaleX(2.0);border-left:1px solid " + _global.rulerBarsConfig.tempGuideColor + ";pointer-events:none;position:absolute;left:0;top:-" + _global.RULER_THICKNESS + "px;height:" + (_global.rulerBarsConfig.left.size + _global.RULER_THICKNESS - _global.rulerBarsConfig.left.startPoint) + "px;}";
-			guideDefinition += "\n.verticalGuideLine{border:none;transform:scaleX(2.0);border-left:1px solid " + _global.rulerBarsConfig.guideColor + ";pointer-events:none;position:absolute;left:0;top:-" + _global.RULER_THICKNESS + "px;height:" + (_global.rulerBarsConfig.left.size + _global.RULER_THICKNESS - _global.rulerBarsConfig.left.startPoint) + "px;}";
+			guideDefinition = ".tempGuideVertical{border:none;border-left:1px solid " + _global.rulerBarsConfig.tempGuideColor + ";pointer-events:none;position:absolute;left:0;top:-" + _global.RULER_THICKNESS + "px;height:" + (_global.rulerBarsConfig.left.size + _global.RULER_THICKNESS - _global.rulerBarsConfig.left.startPoint) + "px;}";
+			guideDefinition += "\n.verticalGuideLine{border:none;border-left:1px solid " + _global.rulerBarsConfig.guideColor + ";pointer-events:none;position:absolute;left:0;top:-" + _global.RULER_THICKNESS + "px;height:" + (_global.rulerBarsConfig.left.size + _global.RULER_THICKNESS - _global.rulerBarsConfig.left.startPoint) + "px;}";
 		}
 		Util.applyCSSRule(guideDefinition, "guideDefinition_" + config.side);
 
@@ -697,8 +697,8 @@
 		if (!_global.rulerBarsCreated || !_global.topRuler || !_global.leftRuler) {
 			return;
 		}
-		/* default thickness scale = 2 */
-		var guideLineThicknessScale = (2 / scale);
+		/* default thickness scale = 1 */
+		var guideLineThicknessScale = (1 / scale);
 		var horizontalGuideLineSize = ((_global.rulerBarsConfig.top.size - _global.rulerBarsConfig.top.startPoint) * scale) + _global.RULER_THICKNESS;
 		var verticalGuideLineSize = ((_global.rulerBarsConfig.left.size - _global.rulerBarsConfig.left.startPoint) * scale) + _global.RULER_THICKNESS;
 
