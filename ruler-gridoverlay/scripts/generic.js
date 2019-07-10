@@ -18,6 +18,27 @@ gridOverlayObject.setZIndex(50);
 gridOverlayObject.setColor("#000");
 var rulerBars = new RulerBars();
 
+var initColors = function() {
+	[].forEach.call(document.querySelectorAll("[data-colorcode]"), function(item) {
+		item.style.backgroundColor = item.getAttribute("data-colorcode");
+		if (item.parentNode.classList.contains("guideColorSet")) {
+			item.addEventListener("click", function(e) {
+				document.querySelector(".guideColorSet .selected").classList.remove("selected");
+				rulerBars.setGuideColor(e.target.getAttribute("data-colorcode"));
+				rulerBars.setTempGuideColor(e.target.getAttribute("data-colorcode"));
+				e.target.classList.add("selected");
+			}, false);
+		} else if (item.parentNode.classList.contains("gridColorSet")) {
+			item.addEventListener("click", function(e) {
+				document.querySelector(".gridColorSet .selected").classList.remove("selected");
+				gridOverlayObject.setColor(e.target.getAttribute("data-colorcode"));
+				e.target.classList.add("selected");
+			}, false);
+		}
+	});
+};
+initColors();
+
 var doExpandCollapse = function(btn) {
 	var panel = btn.parentNode;
 	if (panel.classList.contains("expanded")) {
@@ -34,12 +55,15 @@ var showOverlay = function() {
 	gridOverlayObject.createGridOverlay(scale);
 	document.querySelector(".hideBtn").classList.remove("hide");
 	document.querySelector(".showBtn").classList.add("hide");
+	document.querySelector(".gridColorSet").classList.remove("hide");
 };
 var hideOverlay = function() {
 	gridOverlayObject.removeGridOverlay();
 	document.querySelector(".hideBtn").classList.add("hide");
 	document.querySelector(".showBtn").classList.remove("hide");
+	document.querySelector(".gridColorSet").classList.add("hide");
 };
+
 /**
  * 100% ==> 1.0
  */
@@ -89,6 +113,7 @@ var showRuler = function() {
 	[].forEach.call(document.querySelectorAll(".guideBtn"), function(guideBtn) {
 		guideBtn.classList.remove("visibleNone");
 	});
+	document.querySelector(".guideColorSet").classList.remove("hide");
 	document.querySelector(".toolPanel").style.left = "30px";
 };
 var hideRuler = function() {
@@ -98,6 +123,7 @@ var hideRuler = function() {
 	[].forEach.call(document.querySelectorAll(".guideBtn"), function(guideBtn) {
 		guideBtn.classList.add("visibleNone");
 	});
+	document.querySelector(".guideColorSet").classList.add("hide");
 	document.querySelector(".toolPanel").style.left = "0px";
 };
 var showGuideTip = function() {
@@ -118,6 +144,16 @@ var disableGuides = function() {
 	document.querySelector(".enableGuides").classList.remove("hide");
 	document.querySelector(".disableGuides").classList.add("hide");
 	document.querySelector(".guideTip").classList.add("hide");
+};
+var lockGuides = function() {
+	rulerBars.lockGuides();
+	document.querySelector(".lockGuides").classList.add("hide");
+	document.querySelector(".unlockGuides").classList.remove("hide");
+};
+var unlockGuides = function() {
+	rulerBars.unlockGuides();
+	document.querySelector(".lockGuides").classList.remove("hide");
+	document.querySelector(".unlockGuides").classList.add("hide");
 };
 var clearGuides = function() {
 	rulerBars.clearGuides();

@@ -23,6 +23,8 @@
 			<button type="button" class="hideRulerBtn" onclick="hideRuler();">Hide Ruler</button>
 			<button type="button" class="enableGuides guideBtn" onclick="enableGuides();">Enable Guides</button>
 			<button type="button" class="disableGuides guideBtn hide" onclick="disableGuides();">Disable Guides</button>
+			<button type="button" class="lockGuides guideBtn" onclick="lockGuides();">Lock Guides</button>
+			<button type="button" class="unlockGuides guideBtn hide" onclick="unlockGuides();">Unlock Guides</button>
 			<button type="button" class="clearGuides guideBtn" onclick="clearGuides();">Clear All Guides</button>
 			<fieldset>
 				<legend>
@@ -32,6 +34,9 @@
 				<button type="button" onclick="doZoom('-');">-</button>
 			</fieldset>
 			<button type="button" class="panningTest" onclick="panningTest();">Test PANNING for Ruler, Guides, Zoom Level & Grid Lines</button>
+			<br /> 
+			<span class="gridColorSet">Grid Color: <span data-colorcode="#000" class="selected"></span><span data-colorcode="red"></span><span data-colorcode="yellow"></span><span data-colorcode="orange"></span><span data-colorcode="green"></span><span data-colorcode="blue"></span><span data-colorcode="purple"></span></span>
+			<span class="guideColorSet">Guide Color: <span data-colorcode="#ff0400" class="selected"></span><span data-colorcode="yellow"></span><span data-colorcode="orange"></span><span data-colorcode="green"></span><span data-colorcode="blue"></span><span data-colorcode="purple"></span></span>
 			<div class="expandCollapseBar" onclick="doExpandCollapse(this);"></div>
 		</div>
 	</div>

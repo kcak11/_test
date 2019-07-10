@@ -15,6 +15,8 @@
 	_global.leftGuides = {};
 	_global.UNSET = "UNSET";
 
+	var _pref = {};
+
 	/**
 	 * Utility functions
 	 */
@@ -307,6 +309,7 @@
 		config.size = parseInt(config.size, 10) || 100;
 		_global.rulerBarsConfig.tempGuideColor = _global.rulerBarsConfig.tempGuideColor || "#ffaaab";
 		_global.rulerBarsConfig.guideColor = _global.rulerBarsConfig.guideColor || "#ff0400";
+		_global.rulerBarsConfig.guideDragColor = _global.rulerBarsConfig.guideDragColor || "#000";
 		if (!config.size || isNaN(config.size) || config.size < 0) {
 			throw new Error("Invalid size parameter specified " + config.size + ". Expected positive number.");
 		}
@@ -416,6 +419,10 @@
 	};
 
 	var adjustGuidePosition = function(e, config, ruler, rulerHovered) {
+		if (_pref && _pref.guidesLocked) {
+			_global.activeGuide = null;
+			return;
+		}
 		var offsetProp = (config.side === "top") ? "offsetX" : "offsetY";
 		var direction = (config.side === "top") ? "left" : "top";
 		var tmpGuide = (config.side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE;
@@ -439,6 +446,10 @@
 		tmpGuide.classList.add("invisible");
 		if (_global.activeGuide) {
 			_global.activeGuide.guideLine.style[direction] = guidePosition + "px";
+			if (!_global.activeGuide.guideLine.getAttribute("dragging-mode")) {
+				_global.activeGuide.guideLine.style.borderColor = _global.rulerBarsConfig.guideDragColor;
+				_global.activeGuide.guideLine.setAttribute("dragging-mode", "true");
+			}
 			if ((startPoint % 10 === 0 && guidePosition < (rangeStart + startDelta)) || (startPoint % 10 !== 0 && guidePosition < (rangeStart + startDelta + startPoint % 10)) || (rangeEnd !== _global.UNSET && guidePosition > (rangeEnd - endDelta))) {
 				_global.activeGuide.guideLine.classList.add("invisible");
 				ruler.classList.remove("guideEnabled");
@@ -468,6 +479,9 @@
 		}
 		var tmpGuide = (config.side === "top") ? _global.VERTICAL_TEMPORARY_GUIDE : _global.HORIZONTAL_TEMPORARY_GUIDE;
 		if (_global.activeGuide) {
+			if (_pref && _pref.guidesLocked) {
+				return;
+			}
 			adjustGuidePosition(e, config, ruler, true);
 		} else {
 			tmpGuide.classList.remove("invisible");
@@ -489,6 +503,12 @@
 		var endBoundary = (_global.RULER_THICKNESS + rangeEnd);
 
 		if (_global.activeGuide) {
+			if (_pref && _pref.guidesLocked) {
+				setTimeout(function() {
+					_global.activeGuide = null;
+				}, 100);
+				return;
+			}
 			_global.activeGuide.destroy();
 			_global.activeGuide = null;
 
@@ -525,6 +545,11 @@
 	var rulerClick = function(e, config, ruler) {
 		if (!_global.guides) {
 			return;
+		}
+		if (_pref && _pref.guidesLocked) {
+			if (_global.activeGuide) {
+				return;
+			}
 		}
 		var offsetProp = (config.side === "top") ? "offsetX" : "offsetY";
 		var ranges = getGuideRange(config.side);
@@ -623,6 +648,52 @@
 	 */
 	RulerBars.prototype.isGuidesEnabled = function() {
 		return Boolean(_global.guides);
+	};
+
+	/**
+	 * Lock the existing Guides so that they cannot be moved.
+	 */
+	RulerBars.prototype.lockGuides = function() {
+		_pref = _pref || {};
+		_pref.guidesLocked = true;
+	};
+
+	/**
+	 * UnLock the existing locked Guides so that they can be moved.
+	 */
+	RulerBars.prototype.unlockGuides = function() {
+		_pref = _pref || {};
+		_pref.guidesLocked = false;
+	};
+
+	/**
+	 * Set the Guide color.
+	 */
+	RulerBars.prototype.setGuideColor = function(color) {
+		_global.rulerBarsConfig = _global.rulerBarsConfig || {};
+		var colorCode = (color || _global.rulerBarsConfig.guideColor || "#ff0400");
+		var cssDefn = ".verticalGuideLine,.horizontalGuideLine{border-color:" + colorCode + ";}";
+		Util.applyCSSRule(cssDefn, "__guideColorDefinition");
+		_global.rulerBarsConfig.guideColor = colorCode;
+	};
+
+	/**
+	 * Set the Temporary Guide color.
+	 */
+	RulerBars.prototype.setTempGuideColor = function(color) {
+		_global.rulerBarsConfig = _global.rulerBarsConfig || {};
+		var colorCode = (color || _global.rulerBarsConfig.tempGuideColor || "#ffaaab");
+		var cssDefn = ".tempGuideVertical,.tempGuideHorizontal{border-color:" + colorCode + ";}";
+		Util.applyCSSRule(cssDefn, "__tempGuideColorDefinition");
+		_global.rulerBarsConfig.tempGuideColor = colorCode;
+	};
+
+	/**
+	 * Set the Guide drag color.
+	 */
+	RulerBars.prototype.setGuideDragColor = function(color) {
+		_global.rulerBarsConfig = _global.rulerBarsConfig || {};
+		_global.rulerBarsConfig.guideDragColor = color || "#000";
 	};
 
 	/**
@@ -819,7 +890,8 @@
 	 * @cfg.unitFontColor: The font color for unit text.
 	 * @cfg.congruentUnits: Boolean value indicating that small & medium units are sized congruently.
 	 * @cfg.tempGuideColor: The color for the temporary Guide.
-	 * @cfg.guideColor: The color for the Guide (which has been dropped on the ruler)
+	 * @cfg.guideColor: The color for the Guide (which has been dropped on the ruler).
+	 * @cfg.guideDragColor: The color for the Guide while repositioning/dragging.
 	 * @cfg.zIndex: The zIndex value for the Rulers.
 	 * @cfg.outerBorderColor: The color of outer border.
 	 * @cfg.outerBorderThickness: The width of outer border in pixels.
