@@ -23,6 +23,9 @@ var initColors = function() {
 		item.style.backgroundColor = item.getAttribute("data-colorcode");
 		if (item.parentNode.classList.contains("guideColorSet")) {
 			item.addEventListener("click", function(e) {
+				if (e.target.parentNode.classList.contains("disabled")) {
+					return;
+				}
 				document.querySelector(".guideColorSet .selected").classList.remove("selected");
 				rulerBars.setGuideColor(e.target.getAttribute("data-colorcode"));
 				rulerBars.setTempGuideColor(e.target.getAttribute("data-colorcode"));
@@ -30,6 +33,9 @@ var initColors = function() {
 			}, false);
 		} else if (item.parentNode.classList.contains("gridColorSet")) {
 			item.addEventListener("click", function(e) {
+				if (e.target.parentNode.classList.contains("disabled")) {
+					return;
+				}
 				document.querySelector(".gridColorSet .selected").classList.remove("selected");
 				gridOverlayObject.setColor(e.target.getAttribute("data-colorcode"));
 				e.target.classList.add("selected");
@@ -55,14 +61,16 @@ var showOverlay = function() {
 	gridOverlayObject.createGridOverlay(scale);
 	document.querySelector(".hideBtn").classList.remove("hide");
 	document.querySelector(".showBtn").classList.add("hide");
-	document.querySelector(".gridColorSet").classList.remove("hide");
+	document.querySelector(".gridColorSet").classList.remove("disabled");
 };
 var hideOverlay = function() {
 	gridOverlayObject.removeGridOverlay();
 	document.querySelector(".hideBtn").classList.add("hide");
 	document.querySelector(".showBtn").classList.remove("hide");
-	document.querySelector(".gridColorSet").classList.add("hide");
+	document.querySelector(".gridColorSet").classList.add("disabled");
 };
+/* Don't display Gridlines on page load */
+hideOverlay();
 
 /**
  * 100% ==> 1.0
@@ -113,7 +121,9 @@ var showRuler = function() {
 	[].forEach.call(document.querySelectorAll(".guideBtn"), function(guideBtn) {
 		guideBtn.classList.remove("visibleNone");
 	});
-	document.querySelector(".guideColorSet").classList.remove("hide");
+	if (rulerBars.isGuidesEnabled()) {
+		document.querySelector(".guideColorSet").classList.remove("disabled");
+	}
 	document.querySelector(".toolPanel").style.left = "30px";
 };
 var hideRuler = function() {
@@ -123,7 +133,7 @@ var hideRuler = function() {
 	[].forEach.call(document.querySelectorAll(".guideBtn"), function(guideBtn) {
 		guideBtn.classList.add("visibleNone");
 	});
-	document.querySelector(".guideColorSet").classList.add("hide");
+	document.querySelector(".guideColorSet").classList.add("disabled");
 	document.querySelector(".toolPanel").style.left = "0px";
 };
 var showGuideTip = function() {
@@ -137,12 +147,14 @@ var enableGuides = function() {
 	rulerBars.enableGuides();
 	document.querySelector(".enableGuides").classList.add("hide");
 	document.querySelector(".disableGuides").classList.remove("hide");
+	document.querySelector(".guideColorSet").classList.remove("disabled");
 	showGuideTip();
 };
 var disableGuides = function() {
 	rulerBars.disableGuides();
 	document.querySelector(".enableGuides").classList.remove("hide");
 	document.querySelector(".disableGuides").classList.add("hide");
+	document.querySelector(".guideColorSet").classList.add("disabled");
 	document.querySelector(".guideTip").classList.add("hide");
 };
 var lockGuides = function() {
@@ -194,7 +206,7 @@ var createRulers = function() {
 		outerBorderThickness : "2px",
 		foregroundColor : "rgb(191,191,191)",
 		unitFontColor : "#000",
-		// congruentUnits : true /* this ensures that small & medium lines are sized congruently */
+	// congruentUnits : true /* this ensures that small & medium lines are sized congruently */
 	});
 };
 

@@ -130,6 +130,10 @@ fieldset button {
     font-weight: bold;
 }
 
+.guideColorSet.disabled,.gridColorSet.disabled {
+    opacity: 0.22;
+}
+
 span[data-colorcode] {
     display: inline-block;
     width: 20px;
@@ -141,8 +145,12 @@ span[data-colorcode] {
     cursor: pointer;
 }
 
+.disabled span[data-colorcode] {
+    cursor: auto;
+}
+
 span[data-colorcode].selected {
-	outline: #fff solid 2px;
+    outline: #fff solid 2px;
 }
 
 .guideTip {
